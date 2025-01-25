@@ -1,0 +1,6 @@
+<div>
+    <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+    <p><strong>Registration Date:</strong> {{ user.registrationDate }}</p>
+    <button (click)="edit.emit()">Edit</button>
+    <button (click)="delete.emit()">Delete</button>
+</div>  

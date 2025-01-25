@@ -1,0 +1,22 @@
+<div>
+    <h3>{{ isEditMode ? 'Edit User' : 'Add User' }}</h3>
+    <form (ngSubmit)="saveUser()">
+      <label>
+        First Name:
+        <input [(ngModel)]="user.firstName" name="firstName" required />
+      </label>
+      <br />
+      <label>
+        Last Name:
+        <input [(ngModel)]="user.lastName" name="lastName" required />
+      </label>
+      <br />
+      <label>
+        Registration Date:
+        <input [(ngModel)]="user.registrationDate" name="registrationDate" type="date" required />
+      </label>
+      <br />
+      <button type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
+      <button type="button" (click)="cancel()">Cancel</button>
+    </form>
+</div>
