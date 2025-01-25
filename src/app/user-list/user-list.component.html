@@ -1,13 +1,29 @@
-<div>
-    <button (click)="startAdding()">Add New User</button>
-    <div *ngFor="let user of users; let i = index">
-      <app-user
-        [user]="user"
-        (edit)="startEditing(user, i)"
-        (delete)="deleteUser(i)"
-      ></app-user>
-      <hr />
-    </div>
+<div class="container mt-4">
+    <button class="btn btn-primary mb-3" (click)="startAdding()">Add New User</button>
+    
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Registration Date</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.registrationDate | date }}</td>
+          <td>
+            <button class="btn btn-warning" (click)="startEditing(user, i)">Edit</button>
+            <p></p>
+            <button class="btn btn-danger" (click)="deleteUser(i)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
     <app-user-edit
       *ngIf="isEditorVisible"
       [user]="currentUser"
@@ -15,5 +31,5 @@
       (save)="saveUser($event)"
       (cancelEdit)="cancelEdit()"
     ></app-user-edit>
-</div>
+  </div>
   

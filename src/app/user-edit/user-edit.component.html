@@ -1,22 +1,22 @@
-<div>
-    <h3>{{ isEditMode ? 'Edit User' : 'Add User' }}</h3>
-    <form (ngSubmit)="saveUser()">
-      <label>
-        First Name:
-        <input [(ngModel)]="user.firstName" name="firstName" required />
-      </label>
-      <br />
-      <label>
-        Last Name:
-        <input [(ngModel)]="user.lastName" name="lastName" required />
-      </label>
-      <br />
-      <label>
-        Registration Date:
-        <input [(ngModel)]="user.registrationDate" name="registrationDate" type="date" required />
-      </label>
-      <br />
-      <button type="submit">{{ isEditMode ? 'Save' : 'Add' }}</button>
-      <button type="button" (click)="cancel()">Cancel</button>
-    </form>
-</div>
+<div class="card mt-3">
+    <div class="card-body">
+      <h3>{{ isEditMode ? 'Edit User' : 'Add User' }}</h3>
+      <form (ngSubmit)="saveUser()">
+        <div class="mb-3">
+          <label for="firstName" class="form-label">First Name</label>
+          <input [(ngModel)]="user.firstName" name="firstName" class="form-control" id="firstName" required />
+        </div>
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input [(ngModel)]="user.lastName" name="lastName" class="form-control" id="lastName" required />
+        </div>
+        <div class="mb-3">
+          <label for="registrationDate" class="form-label">Registration Date</label>
+          <input [(ngModel)]="user.registrationDate" name="registrationDate" class="form-control" type="date" id="registrationDate" required />
+        </div>
+        <button type="submit" class="btn btn-success">{{ isEditMode ? 'Save Changes' : 'Add User' }}</button>
+        <p></p>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+      </form>
+    </div>
+</div>  
