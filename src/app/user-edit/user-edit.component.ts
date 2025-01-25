@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-user-edit',
@@ -15,8 +15,14 @@ export class UserEditComponent {
   @Output() save = new EventEmitter<any>();
   @Output() cancelEdit = new EventEmitter<void>();
 
-  saveUser() {
-    this.save.emit(this.user);
+  today: string = new Date().toISOString().split('T')[0];
+
+  saveUser(form: NgForm) {
+    if (form.valid) {
+      this.save.emit(this.user);
+    } else {
+      console.log("Form is invalid");
+    }
   }
 
   cancel() {

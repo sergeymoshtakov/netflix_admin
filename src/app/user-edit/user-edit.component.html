@@ -1,22 +1,61 @@
 <div class="card mt-3">
     <div class="card-body">
       <h3>{{ isEditMode ? 'Edit User' : 'Add User' }}</h3>
-      <form (ngSubmit)="saveUser()">
+      <form (ngSubmit)="saveUser(userForm)" #userForm="ngForm">
         <div class="mb-3">
           <label for="firstName" class="form-label">First Name</label>
-          <input [(ngModel)]="user.firstName" name="firstName" class="form-control" id="firstName" required />
+          <input
+            [(ngModel)]="user.firstName"
+            name="firstName"
+            class="form-control"
+            id="firstName"
+            required
+            #firstName="ngModel"
+          />
+          <div *ngIf="firstName.invalid && firstName.touched" class="text-danger">
+            First Name is required.
+          </div>
         </div>
+        
         <div class="mb-3">
           <label for="lastName" class="form-label">Last Name</label>
-          <input [(ngModel)]="user.lastName" name="lastName" class="form-control" id="lastName" required />
+          <input
+            [(ngModel)]="user.lastName"
+            name="lastName"
+            class="form-control"
+            id="lastName"
+            required
+            #lastName="ngModel"
+          />
+          <div *ngIf="lastName.invalid && lastName.touched" class="text-danger">
+            Last Name is required.
+          </div>
         </div>
+        
         <div class="mb-3">
           <label for="registrationDate" class="form-label">Registration Date</label>
-          <input [(ngModel)]="user.registrationDate" name="registrationDate" class="form-control" type="date" id="registrationDate" required />
+          <input
+            [(ngModel)]="user.registrationDate"
+            name="registrationDate"
+            class="form-control"
+            type="date"
+            id="registrationDate"
+            [max]="today"
+            required
+            #registrationDate="ngModel"
+          />
+          <div *ngIf="registrationDate.invalid && registrationDate.touched" class="text-danger">
+            <div *ngIf="registrationDate.errors?.['required']">Registration Date is required.</div>
+            <div *ngIf="registrationDate.errors?.['max']">Date cannot be in the future.</div>
+          </div>
         </div>
-        <button type="submit" class="btn btn-success">{{ isEditMode ? 'Save Changes' : 'Add User' }}</button>
+        
+        <button type="submit" class="btn btn-success" [disabled]="userForm.invalid">
+          {{ isEditMode ? 'Save Changes' : 'Add User' }}
+        </button>
         <p></p>
         <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
       </form>
     </div>
-</div>  
+  </div>
+  
