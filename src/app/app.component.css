@@ -1,12 +1,21 @@
 *{
     padding: 0;
     margin: 0;
+    background-color: black;
+    color: white;
 }
 
 button{
     margin: 10px;
+    color: white;
+    background-color: #24C0C9;
+    border: none;
 }
 
 .page-title{
     text-align: center;
+    color: #24C0C9;
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 1px;
+    padding: 10px;
 }

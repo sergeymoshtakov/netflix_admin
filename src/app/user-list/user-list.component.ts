@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserEditComponent } from '../user-edit/user-edit.component';
-import { UserComponent } from '../user/user.component';
 
 @Component({
   selector: 'app-user-list',
   standalone: true,
-  imports: [UserComponent, CommonModule, UserEditComponent],
+  imports: [CommonModule, UserEditComponent],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css'
 })

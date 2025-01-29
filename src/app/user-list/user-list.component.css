@@ -1,0 +1,17 @@
+*{
+    background-color: black;
+}
+
+.user-list{
+    padding: 10px;
+}
+
+button {
+    color: white;
+    background-color: #24C0C9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 5px 0px;
+    cursor: pointer;
+}

@@ -1,9 +1,9 @@
-<div class="card mt-3">
-    <div class="card-body">
+<div>
+    <div>
       <h3>{{ isEditMode ? 'Edit User' : 'Add User' }}</h3>
-      <form (ngSubmit)="saveUser(userForm)" #userForm="ngForm">
-        <div class="mb-3">
-          <label for="firstName" class="form-label">First Name</label>
+      <form class="user-form" (ngSubmit)="saveUser(userForm)" #userForm="ngForm">
+        <div>
+          <label for="firstName">First Name</label>
           <input
             [(ngModel)]="user.firstName"
             name="firstName"
@@ -17,8 +17,8 @@
           </div>
         </div>
         
-        <div class="mb-3">
-          <label for="lastName" class="form-label">Last Name</label>
+        <div>
+          <label for="lastName">Last Name</label>
           <input
             [(ngModel)]="user.lastName"
             name="lastName"
@@ -32,8 +32,8 @@
           </div>
         </div>
         
-        <div class="mb-3">
-          <label for="registrationDate" class="form-label">Registration Date</label>
+        <div>
+          <label for="registrationDate">Registration Date</label>
           <input
             [(ngModel)]="user.registrationDate"
             name="registrationDate"
@@ -49,12 +49,12 @@
             <div *ngIf="registrationDate.errors?.['max']">Date cannot be in the future.</div>
           </div>
         </div>
-        
-        <button type="submit" class="btn btn-success" [disabled]="userForm.invalid">
+        <p></p>
+        <button type="submit" [disabled]="userForm.invalid">
           {{ isEditMode ? 'Save Changes' : 'Add User' }}
         </button>
         <p></p>
-        <button type="button" class="btn btn-secondary" (click)="cancel()">Cancel</button>
+        <button type="button" (click)="cancel()">Cancel</button>
       </form>
     </div>
   </div>

@@ -1,0 +1,29 @@
+*{
+    color: white;
+}
+
+button{
+    color: white;
+    background-color: #24C0C9;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 5px 0px;
+    cursor: pointer;
+}
+
+.user-form{
+    width: 40%;
+}
+
+@media only screen and (max-width: 1400px) {
+    .user-form{
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .user-form{
+        width: 80%;
+    }
+}
