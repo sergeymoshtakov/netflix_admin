@@ -1,0 +1,56 @@
+* {
+  padding: 0;
+  margin: 0;
+  background-color: black;
+  color: white;
+}
+
+button {
+  margin: 10px;
+  color: white;
+  background-color: #24c0c9;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.page-title {
+  text-align: center;
+  color: #24c0c9;
+  font-family: 'Press Start 2P', cursive;
+  letter-spacing: 1px;
+  padding: 10px;
+}
+
+.user-form {
+  width: 40%;
+}
+
+@media only screen and (max-width: 1400px) {
+  .user-form {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .user-form {
+    width: 80%;
+  }
+}
+
+.user-list {
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
