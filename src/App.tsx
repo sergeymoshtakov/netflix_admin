@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import UserList from './components/UserList';
 import SeriesList from './components/SeriesList';
+import NavBar from './components/NavBar';
 import { User } from './models/User';
 import { Series } from './models/Series';
 import './App.css';
@@ -68,22 +69,7 @@ const App: React.FC = () => {
           <Login users={users} onLogin={handleLogin} />
         ) : (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p>Welcome, {currentUser.firstName} ({currentUser.role})</p>
-              <button onClick={handleLogout} className="logout-button">
-                Logout
-              </button>
-            </div>
-            <nav>
-              <ul style={{ listStyle: 'none', padding: 0, display: 'flex', gap: '20px' }}>
-                <li>
-                  <Link to="/">User List</Link>
-                </li>
-                <li>
-                  <Link to="/series">Series List</Link>
-                </li>
-              </ul>
-            </nav>
+            <NavBar onLogout={handleLogout} currentUser={currentUser} />
             <Routes>
               <Route
                 path="/"

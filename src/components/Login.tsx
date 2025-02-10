@@ -17,7 +17,7 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
     if (user && user.role === 'admin') {
       onLogin(user);
     } else {
-      setError('Invalid email, password, or you are not an admin.');
+      setError('Invalid credentials.');
     }
   };
 
