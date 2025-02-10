@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-
-interface User {
-  firstName: string;
-  lastName: string;
-  registrationDate: string;
-}
+import { User } from '../models/User';
 
 interface UserEditProps {
   user: User;
@@ -15,9 +10,8 @@ interface UserEditProps {
 
 const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel }) => {
   const [formData, setFormData] = useState<User>(user);
-  const today = new Date().toISOString().split('T')[0];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -54,22 +48,35 @@ const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel 
           />
         </div>
         <div>
-          <label htmlFor="registrationDate">Registration Date</label>
+          <label htmlFor="email">Email</label>
           <input
-            type="date"
-            id="registrationDate"
-            name="registrationDate"
-            value={formData.registrationDate}
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
-            max={today}
             required
           />
         </div>
-        <p></p>
-        <button type="submit" disabled={!formData.firstName || !formData.lastName || !formData.registrationDate}>
-          {isEditMode ? 'Save Changes' : 'Add User'}
-        </button>
-        <p></p>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="role">Role</label>
+          <select id="role" name="role" value={formData.role} onChange={handleChange}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button type="submit">{isEditMode ? 'Save Changes' : 'Add User'}</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>
