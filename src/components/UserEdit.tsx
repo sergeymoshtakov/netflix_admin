@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { User } from '../models/User';
+import { AppUser } from '../models/AppUser';
 
 interface UserEditProps {
-  user: User;
+  user: AppUser;
   isEditMode: boolean;
-  onSave: (user: User) => void;
+  onSave: (user: AppUser) => void;
   onCancel: () => void;
 }
 
 const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel }) => {
-  const [formData, setFormData] = useState<User>(user);
+  const [formData, setFormData] = useState<AppUser>(user);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -26,23 +26,34 @@ const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel 
       <h3>{isEditMode ? 'Edit User' : 'Add User'}</h3>
       <form className="user-form" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="firstName">First Name</label>
+          <label htmlFor="username">Username</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
+            id="username"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             required
           />
         </div>
         <div>
-          <label htmlFor="lastName">Last Name</label>
+          <label htmlFor="firstname">First Name</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
+            id="firstname"
+            name="firstname"
+            value={formData.firstname}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="surname">Surname</label>
+          <input
+            type="text"
+            id="surname"
+            name="surname"
+            value={formData.surname}
             onChange={handleChange}
             required
           />
@@ -59,22 +70,36 @@ const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel 
           />
         </div>
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="phone_num">Phone</label>
           <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
+            type="text"
+            id="phone_num"
+            name="phone_num"
+            value={formData.phone_num}
             onChange={handleChange}
             required
           />
         </div>
         <div>
-          <label htmlFor="role">Role</label>
-          <select id="role" name="role" value={formData.role} onChange={handleChange}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
+          <label htmlFor="enc_password">Password</label>
+          <input
+            type="password"
+            id="enc_password"
+            name="enc_password"
+            value={formData.enc_password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="avatar">Avatar URL</label>
+          <input
+            type="text"
+            id="avatar"
+            name="avatar"
+            value={formData.avatar}
+            onChange={handleChange}
+          />
         </div>
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add User'}</button>
         <button type="button" onClick={onCancel}>

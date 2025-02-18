@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { User } from '../models/User';
+import { AppUser } from '../models/AppUser';
 
 interface LoginProps {
-  users: User[];
-  onLogin: (user: User) => void;
+  users: AppUser[];
+  onLogin: (user: AppUser) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
@@ -13,17 +13,17 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const user = users.find((u) => u.email === email && u.password === password);
-    if (user && user.role === 'admin') {
+    const user = users.find((u) => u.email === email && u.enc_password === password);
+    if (user) {
       onLogin(user);
     } else {
-      setError('Invalid credentials.');
+      setError('Invalid email or password');
     }
   };
 
   return (
     <div>
-      <h3>Admin Login</h3>
+      <h3>Login</h3>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">Email</label>

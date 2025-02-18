@@ -1,24 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AppUser } from '../models/AppUser';
 
 interface NavBarProps {
   onLogout: () => void;
-  currentUser: { firstName: string; role: string } | null;
+  currentUser: AppUser | null;
 }
 
 const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {currentUser && (
-          <p>Welcome, {currentUser.firstName} ({currentUser.role})</p>
+          <p>
+            Welcome, {currentUser.firstname} (
+            {currentUser.roles ? currentUser.roles.map((role) => role.name).join(', ') : 'No roles'})
+          </p>
         )}
         <button onClick={onLogout} className="logout-button">
           Logout
         </button>
       </div>
       <nav>
-        <ul style={{ listStyle: 'none', padding: '10px', display: 'flex', gap: '20px' }}>
+        <ul style={{ listStyle: 'none', padding: 0, display: 'flex', gap: '20px' }}>
           <li>
             <Link to="/">User List</Link>
           </li>

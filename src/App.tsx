@@ -4,26 +4,35 @@ import Login from './components/Login';
 import UserList from './components/UserList';
 import SeriesList from './components/SeriesList';
 import NavBar from './components/NavBar';
-import { User } from './models/User';
+import { AppUser, Role } from './models/AppUser';
 import { Series } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([
+  const initialRoles: Role[] = [
+    { id: 1, name: 'admin' },
+    { id: 2, name: 'user' },
+  ];
+
+  const [users, setUsers] = useState<AppUser[]>([
     {
       id: 1,
-      firstName: 'Admin',
-      lastName: 'User',
+      username: 'admin',
+      firstname: 'Admin',
+      surname: 'User',
       email: 'admin@example.com',
-      password: 'admin123',
-      registrationDate: new Date().toISOString().split('T')[0],
-      role: 'admin',
+      phone_num: '1234567890',
+      enc_password: 'admin123',
+      avatar: '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      roles: [initialRoles[0]],
     },
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
-  const handleLogin = (user: User) => {
+  const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
   };
 
@@ -31,11 +40,11 @@ const App: React.FC = () => {
     setCurrentUser(null);
   };
 
-  const handleAddUser = (user: User) => {
+  const handleAddUser = (user: AppUser) => {
     setUsers([...users, user]);
   };
 
-  const handleEditUser = (user: User, index: number) => {
+  const handleEditUser = (user: AppUser, index: number) => {
     const updatedUsers = [...users];
     updatedUsers[index] = user;
     setUsers(updatedUsers);

@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import UserEdit from './UserEdit';
-import { User } from '../models/User';
+import { AppUser } from '../models/AppUser';
 
 interface UserListProps {
-  users: User[];
-  onAddUser: (user: User) => void;
-  onEditUser: (user: User, index: number) => void;
+  users: AppUser[];
+  onAddUser: (user: AppUser) => void;
+  onEditUser: (user: AppUser, index: number) => void;
   onDeleteUser: (index: number) => void;
 }
 
 const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDeleteUser }) => {
-  const [currentUser, setCurrentUser] = useState<User>({
+  const [currentUser, setCurrentUser] = useState<AppUser>({
     id: 0,
-    firstName: '',
-    lastName: '',
+    username: '',
+    firstname: '',
+    surname: '',
     email: '',
-    password: '',
-    registrationDate: new Date().toISOString().split('T')[0],
-    role: 'user',
+    phone_num: '',
+    enc_password: '',
+    avatar: '',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -26,25 +29,28 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
   const startAdding = () => {
     setCurrentUser({
       id: Date.now(),
-      firstName: '',
-      lastName: '',
+      username: '',
+      firstname: '',
+      surname: '',
       email: '',
-      password: '',
-      registrationDate: new Date().toISOString().split('T')[0],
-      role: 'user',
+      phone_num: '',
+      enc_password: '',
+      avatar: '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
   };
 
-  const startEditing = (user: User, index: number) => {
+  const startEditing = (user: AppUser, index: number) => {
     setCurrentUser({ ...user });
     setIsEditMode(true);
     setEditingIndex(index);
     setIsEditorVisible(true);
   };
 
-  const saveUser = (user: User) => {
+  const saveUser = (user: AppUser) => {
     if (isEditMode && editingIndex !== null) {
       onEditUser(user, editingIndex);
     } else {
@@ -63,22 +69,22 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
       <table>
         <thead>
           <tr>
+            <th>Username</th>
             <th>First Name</th>
-            <th>Last Name</th>
+            <th>Surname</th>
             <th>Email</th>
-            <th>Registration Date</th>
-            <th>Role</th>
+            <th>Phone</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
             <tr key={user.id}>
-              <td>{user.firstName}</td>
-              <td>{user.lastName}</td>
+              <td>{user.username}</td>
+              <td>{user.firstname}</td>
+              <td>{user.surname}</td>
               <td>{user.email}</td>
-              <td>{user.registrationDate}</td>
-              <td>{user.role}</td>
+              <td>{user.phone_num}</td>
               <td>
                 <button onClick={() => startEditing(user, index)}>Edit</button>
                 <button onClick={() => onDeleteUser(index)}>Delete</button>
