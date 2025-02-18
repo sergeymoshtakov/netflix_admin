@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { AppUser } from '../models/AppUser';
 import '../styles/Login.css';
+import eyeIcon from '../assets/eye.png';
+import closedEyeIcon from '../assets/closed_eye.png';
 
 interface LoginProps {
   users: AppUser[];
@@ -11,7 +13,7 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Состояние для показа/скрытия пароля
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +56,11 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
                 required
               />
               <span className="password-toggle" onClick={togglePasswordVisibility}>
-                {showPassword ? '👁️' : '👁️‍🗨️'}
+                <img
+                  src={showPassword ? eyeIcon : closedEyeIcon}
+                  alt={showPassword ? 'Hide password' : 'Show password'}
+                  className="eye-icon"
+                />
               </span>
             </div>
           </div>
