@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AppUser } from '../models/AppUser';
+import '../styles/Login.css';
 
 interface LoginProps {
   users: AppUser[];
@@ -17,37 +18,41 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
     if (user) {
       onLogin(user);
     } else {
-      setError('Invalid email or password');
+      setError('Wrong e-mail or password. Please try again.');
     }
   };
 
   return (
-    <div>
-      <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Login</button>
-      </form>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Log in</h2>
+        {error && <p className="error-message">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="login-button">
+            Log in
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
