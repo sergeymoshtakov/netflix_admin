@@ -18,15 +18,21 @@ const Login: React.FC<LoginProps> = ({ users, onLogin }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const user = users.find((u) => u.email === email && u.enc_password === password);
+
     if (user) {
-      onLogin(user);
+      const isAdmin = user.roles?.some((role) => role.name === 'admin');
+      if (isAdmin) {
+        onLogin(user);
+      } else {
+        setError('You do not have permission to access the admin panel.');
+      }
     } else {
       setError('Wrong e-mail or password. Please try again.');
     }
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword); // Переключаем видимость пароля
+    setShowPassword(!showPassword);
   };
 
   return (
