@@ -16,6 +16,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
     description: '',
     releaseDate: new Date().toISOString().split('T')[0],
     rating: 0,
+    episodes: [],
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -28,6 +29,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
       description: '',
       releaseDate: new Date().toISOString().split('T')[0],
       rating: 0,
+      episodes: [],
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
@@ -63,6 +65,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
             <th>Description</th>
             <th>Release Date</th>
             <th>Rating</th>
+            <th>Episodes</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -73,6 +76,13 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
               <td>{series.description}</td>
               <td>{series.releaseDate}</td>
               <td>{series.rating}</td>
+              <td>
+                <ul>
+                  {series.episodes.map((episode) => (
+                    <li key={episode.id}>{episode.title}</li>
+                  ))}
+                </ul>
+              </td>
               <td>
                 <button onClick={() => startEditing(series, index)}>Edit</button>
                 <button onClick={() => onDeleteSeries(index)}>Delete</button>
