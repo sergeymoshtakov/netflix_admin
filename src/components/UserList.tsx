@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import UserEdit from './UserEdit';
-import { AppUser } from '../models/AppUser';
+import RoleEdit from './RoleEdit';
+import { AppUser, Role } from '../models/AppUser';
 
 interface UserListProps {
   users: AppUser[];
+  roles: Role[];
   onAddUser: (user: AppUser) => void;
   onEditUser: (user: AppUser, index: number) => void;
   onDeleteUser: (index: number) => void;
 }
 
-const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDeleteUser }) => {
+const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser, onDeleteUser }) => {
   const [currentUser, setCurrentUser] = useState<AppUser>({
     id: 0,
     username: '',
@@ -21,8 +23,10 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
     avatar: '',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    roles: [],
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
+  const [isRoleEditorVisible, setIsRoleEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -38,6 +42,7 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
       avatar: '',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      roles: [],
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
@@ -50,6 +55,12 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
     setIsEditorVisible(true);
   };
 
+  const startEditingRoles = (user: AppUser, index: number) => {
+    setCurrentUser({ ...user });
+    setEditingIndex(index);
+    setIsRoleEditorVisible(true);
+  };
+
   const saveUser = (user: AppUser) => {
     if (isEditMode && editingIndex !== null) {
       onEditUser(user, editingIndex);
@@ -59,8 +70,16 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
     setIsEditorVisible(false);
   };
 
+  const saveRoles = (user: AppUser) => {
+    if (editingIndex !== null) {
+      onEditUser(user, editingIndex);
+    }
+    setIsRoleEditorVisible(false);
+  };
+
   const cancelEdit = () => {
     setIsEditorVisible(false);
+    setIsRoleEditorVisible(false);
   };
 
   return (
@@ -87,6 +106,7 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
               <td>{user.phone_num}</td>
               <td>
                 <button onClick={() => startEditing(user, index)}>Edit</button>
+                <button onClick={() => startEditingRoles(user, index)}>Edit Roles</button>
                 <button onClick={() => onDeleteUser(index)}>Delete</button>
               </td>
             </tr>
@@ -96,8 +116,17 @@ const UserList: React.FC<UserListProps> = ({ users, onAddUser, onEditUser, onDel
       {isEditorVisible && (
         <UserEdit
           user={currentUser}
+          roles={roles}
           isEditMode={isEditMode}
           onSave={saveUser}
+          onCancel={cancelEdit}
+        />
+      )}
+      {isRoleEditorVisible && (
+        <RoleEdit
+          user={currentUser}
+          roles={roles}
+          onSave={saveRoles}
           onCancel={cancelEdit}
         />
       )}

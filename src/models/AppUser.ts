@@ -9,7 +9,7 @@ export interface AppUser {
     avatar: string;
     created_at: string;
     updated_at: string;
-    roles?: Role[]; // Опциональное поле для ролей
+    roles?: Role[];
   }
   
   export interface Role {

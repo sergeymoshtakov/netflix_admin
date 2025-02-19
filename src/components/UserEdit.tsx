@@ -1,24 +1,34 @@
 import React, { useState } from 'react';
-import { AppUser } from '../models/AppUser';
+import { AppUser, Role } from '../models/AppUser';
 
 interface UserEditProps {
   user: AppUser;
+  roles: Role[];
   isEditMode: boolean;
   onSave: (user: AppUser) => void;
   onCancel: () => void;
 }
 
-const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel }) => {
+const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, onCancel }) => {
   const [formData, setFormData] = useState<AppUser>(user);
+  const [selectedRoles, setSelectedRoles] = useState<Role[]>(user.roles || []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleRoleChange = (role: Role) => {
+    if (selectedRoles.some((r) => r.id === role.id)) {
+      setSelectedRoles(selectedRoles.filter((r) => r.id !== role.id));
+    } else {
+      setSelectedRoles([...selectedRoles, role]);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    onSave({ ...formData, roles: selectedRoles });
   };
 
   return (
@@ -100,6 +110,21 @@ const UserEdit: React.FC<UserEditProps> = ({ user, isEditMode, onSave, onCancel 
             value={formData.avatar}
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <h4>Roles</h4>
+          {roles.map((role) => (
+            <div key={role.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectedRoles.some((r) => r.id === role.id)}
+                  onChange={() => handleRoleChange(role)}
+                />
+                {role.name}
+              </label>
+            </div>
+          ))}
         </div>
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add User'}</button>
         <button type="button" onClick={onCancel}>

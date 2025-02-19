@@ -85,6 +85,7 @@ const App: React.FC = () => {
                 element={
                   <UserList
                     users={users}
+                    roles={initialRoles}
                     onAddUser={handleAddUser}
                     onEditUser={handleEditUser}
                     onDeleteUser={handleDeleteUser}
