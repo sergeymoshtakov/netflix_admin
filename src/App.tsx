@@ -27,7 +27,7 @@ const App: React.FC = () => {
       avatar: '',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      roles: [initialRoles[0]],
+      roles: [initialRoles[0]], // Роль "admin"
     },
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
@@ -83,6 +83,10 @@ const App: React.FC = () => {
     setRoles(updatedRoles);
   };
 
+  const handleAddRole = (role: Role) => {
+    setRoles([...roles, role]);
+  };
+
   return (
     <Router>
       <div>
@@ -123,6 +127,7 @@ const App: React.FC = () => {
                     roles={roles}
                     onEditRole={handleEditRole}
                     onDeleteRole={handleDeleteRole}
+                    onAddRole={handleAddRole}
                   />
                 }
               />

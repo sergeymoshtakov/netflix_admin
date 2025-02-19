@@ -5,11 +5,14 @@ interface RoleListProps {
   roles: Role[];
   onEditRole: (role: Role, index: number) => void;
   onDeleteRole: (index: number) => void;
+  onAddRole: (role: Role) => void;
 }
 
-const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole }) => {
+const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, onAddRole }) => {
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [newRoleName, setNewRoleName] = useState('');
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false); // Состояние для отображения формы добавления
 
   const startEditing = (role: Role, index: number) => {
     setEditingRole(role);
@@ -29,9 +32,43 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole }) 
     setEditingIndex(null);
   };
 
+  const handleAddRole = () => {
+    if (newRoleName.trim()) {
+      const newRole: Role = {
+        id: Date.now(),
+        name: newRoleName,
+      };
+      onAddRole(newRole);
+      setNewRoleName('');
+      setIsAddFormVisible(false); // Скрываем форму после добавления
+    }
+  };
+
   return (
     <div className="role-list">
       <h2>Roles</h2>
+
+      {/* Кнопка для добавления новой роли */}
+      <button onClick={() => setIsAddFormVisible(!isAddFormVisible)}>
+        {isAddFormVisible ? 'Cancel Adding Role' : 'Add New Role'}
+      </button>
+
+      {/* Форма для добавления новой роли */}
+      {isAddFormVisible && (
+        <div className="add-role-form">
+          <h3>Add New Role</h3>
+          <input
+            type="text"
+            placeholder="Enter role name"
+            value={newRoleName}
+            onChange={(e) => setNewRoleName(e.target.value)}
+          />
+          <button type="button" onClick={handleAddRole}>
+            Add Role
+          </button>
+        </div>
+      )}
+
       <table>
         <thead>
           <tr>
