@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import UserList from './components/UserList';
 import SeriesList from './components/SeriesList';
+import RoleList from './components/RoleList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
 import { Series } from './models/Series';
@@ -30,6 +31,7 @@ const App: React.FC = () => {
     },
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
+  const [roles, setRoles] = useState<Role[]>(initialRoles);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
@@ -70,6 +72,17 @@ const App: React.FC = () => {
     setSeriesList(updatedSeries);
   };
 
+  const handleEditRole = (role: Role, index: number) => {
+    const updatedRoles = [...roles];
+    updatedRoles[index] = role;
+    setRoles(updatedRoles);
+  };
+
+  const handleDeleteRole = (index: number) => {
+    const updatedRoles = roles.filter((_, i) => i !== index);
+    setRoles(updatedRoles);
+  };
+
   return (
     <Router>
       <div>
@@ -85,7 +98,7 @@ const App: React.FC = () => {
                 element={
                   <UserList
                     users={users}
-                    roles={initialRoles}
+                    roles={roles}
                     onAddUser={handleAddUser}
                     onEditUser={handleEditUser}
                     onDeleteUser={handleDeleteUser}
@@ -100,6 +113,16 @@ const App: React.FC = () => {
                     onAddSeries={handleAddSeries}
                     onEditSeries={handleEditSeries}
                     onDeleteSeries={handleDeleteSeries}
+                  />
+                }
+              />
+              <Route
+                path="/roles"
+                element={
+                  <RoleList
+                    roles={roles}
+                    onEditRole={handleEditRole}
+                    onDeleteRole={handleDeleteRole}
                   />
                 }
               />
