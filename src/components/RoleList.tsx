@@ -12,7 +12,7 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
   const [editingRole, setEditingRole] = useState<Role | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newRoleName, setNewRoleName] = useState('');
-  const [isAddFormVisible, setIsAddFormVisible] = useState(false); // Состояние для отображения формы добавления
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
   const startEditing = (role: Role, index: number) => {
     setEditingRole(role);
@@ -40,7 +40,7 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
       };
       onAddRole(newRole);
       setNewRoleName('');
-      setIsAddFormVisible(false); // Скрываем форму после добавления
+      setIsAddFormVisible(false);
     }
   };
 
@@ -48,12 +48,10 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
     <div className="role-list">
       <h2>Roles</h2>
 
-      {/* Кнопка для добавления новой роли */}
       <button onClick={() => setIsAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? 'Cancel Adding Role' : 'Add New Role'}
       </button>
 
-      {/* Форма для добавления новой роли */}
       {isAddFormVisible && (
         <div className="add-role-form">
           <h3>Add New Role</h3>
