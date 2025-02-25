@@ -46,8 +46,6 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
 
   return (
     <div className="role-list">
-      <h2>Roles</h2>
-
       <button onClick={() => setIsAddFormVisible(!isAddFormVisible)}>
         {isAddFormVisible ? 'Cancel Adding Role' : 'Add New Role'}
       </button>
