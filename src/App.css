@@ -15,6 +15,10 @@ button {
   cursor: pointer;
 }
 
+button:hover{
+  background-color: rgb(0, 238, 255);
+}
+
 .page-title {
   text-align: center;
   color: #24c0c9;
@@ -47,13 +51,108 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 th, td {
-  padding: 10px;
+  padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #333;
 }
+
+th {
+  background-color: #24c0c9;
+  color: white;
+  font-weight: bold;
+}
+
+tr:hover {
+  background-color: #333;
+}
+
+table button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  background-color: #24c0c9;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+table button:hover {
+  background-color: rgb(0, 238, 255);
+}
+
+/* .add-role-form {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #1e1e1e;
+}
+
+.add-role-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+}
+
+.add-role-form button {
+  margin-right: 10px;
+  background-color: #1e8e95;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.add-role-form button:hover {
+  background-color: #27b9c3;
+}
+
+.role-edit-form {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #1e1e1e;
+}
+
+.role-edit-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.role-edit-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+}
+
+.role-edit-form button {
+  margin-right: 10px;
+  background-color: #1e8e95;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.role-edit-form button:hover {
+  background-color: #27b9c3;
+} */
 
 nav ul {
   list-style: none;
@@ -64,10 +163,12 @@ nav ul {
 
 nav ul li a {
   text-decoration: none;
-  color: #24c0c9;
+  background-color: #24c0c9;
+  border-radius: 4px;
+  padding: .4rem .5rem;
   font-weight: bold;
 }
 
 nav ul li a:hover {
-  text-decoration: underline;
+  background-color: rgb(0, 238, 255);
 }
