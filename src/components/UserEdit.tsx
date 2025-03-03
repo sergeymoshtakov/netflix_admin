@@ -14,8 +14,11 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
   const [selectedRoles, setSelectedRoles] = useState<Role[]>(user.roles || []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleRoleChange = (role: Role) => {
@@ -110,6 +113,17 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
             value={formData.avatar}
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              name="isBanned"
+              checked={formData.isBanned}
+              onChange={handleChange}
+            />
+            Is banned
+          </label>
         </div>
         <div>
           <h4>Roles</h4>

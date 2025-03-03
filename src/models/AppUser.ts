@@ -10,6 +10,7 @@ export interface AppUser {
     created_at: string;
     updated_at: string;
     roles?: Role[];
+    isBanned: boolean;
   }
   
   export interface Role {

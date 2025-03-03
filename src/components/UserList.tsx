@@ -24,6 +24,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     roles: [],
+    isBanned: false,
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isRoleEditorVisible, setIsRoleEditorVisible] = useState(false);
@@ -43,6 +44,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       roles: [],
+      isBanned: false,
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
@@ -82,6 +84,12 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     setIsRoleEditorVisible(false);
   };
 
+  const toggleBanUser = (index: number) => {
+    const updatedUsers = [...users];
+    updatedUsers[index].isBanned = !updatedUsers[index].isBanned;
+    onEditUser(updatedUsers[index], index);
+  };
+
   return (
     <div className="user-list">
       <button onClick={startAdding}>Add New User</button>
@@ -93,6 +101,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
             <th>Surname</th>
             <th>Email</th>
             <th>Phone</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -104,9 +113,15 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
               <td>{user.surname}</td>
               <td>{user.email}</td>
               <td>{user.phone_num}</td>
+              <td data-status={user.isBanned ? "banned" : "active"}>
+                {user.isBanned? "Banned" : "Active"}
+              </td>
               <td>
                 <button onClick={() => startEditing(user, index)}>Edit</button>
                 <button onClick={() => startEditingRoles(user, index)}>Edit Roles</button>
+                <button onClick={() => toggleBanUser(index)}>
+                  {user.isBanned ? "Unban" : "Ban"}
+                </button>
                 <button onClick={() => onDeleteUser(index)}>Delete</button>
               </td>
             </tr>

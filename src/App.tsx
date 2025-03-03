@@ -28,6 +28,7 @@ const App: React.FC = () => {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       roles: [initialRoles[0]], // Роль "admin"
+      isBanned: false,
     },
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
