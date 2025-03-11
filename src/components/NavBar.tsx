@@ -32,6 +32,9 @@ const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
           <li>
             <Link to="/roles">Roles</Link>
           </li>
+          <li>
+            <Link to="/categories">Categories</Link>
+          </li>
         </ul>
       </nav>
     </div>

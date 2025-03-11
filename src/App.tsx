@@ -4,9 +4,10 @@ import Login from './components/Login';
 import UserList from './components/UserList';
 import SeriesList from './components/SeriesList';
 import RoleList from './components/RoleList';
+import CategoryList from './components/CategoryList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Series } from './models/Series';
+import { Series, Category } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -33,6 +34,7 @@ const App: React.FC = () => {
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
+  const [categories, setCategories] = useState<Category[]>([]); // Состояние для категорий
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
@@ -88,6 +90,22 @@ const App: React.FC = () => {
     setRoles([...roles, role]);
   };
 
+  // Логика для работы с категориями
+  const handleAddCategory = (category: Category) => {
+    setCategories([...categories, category]);
+  };
+
+  const handleEditCategory = (category: Category, index: number) => {
+    const updatedCategories = [...categories];
+    updatedCategories[index] = category;
+    setCategories(updatedCategories);
+  };
+
+  const handleDeleteCategory = (index: number) => {
+    const updatedCategories = categories.filter((_, i) => i !== index);
+    setCategories(updatedCategories);
+  };
+
   return (
     <Router>
       <div>
@@ -129,6 +147,17 @@ const App: React.FC = () => {
                     onEditRole={handleEditRole}
                     onDeleteRole={handleDeleteRole}
                     onAddRole={handleAddRole}
+                  />
+                }
+              />
+              <Route
+                path="/categories"
+                element={
+                  <CategoryList
+                    categories={categories}
+                    onAddCategory={handleAddCategory}
+                    onEditCategory={handleEditCategory}
+                    onDeleteCategory={handleDeleteCategory}
                   />
                 }
               />
