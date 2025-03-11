@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { Series, Episode } from '../models/Series';
+import { Series, Episode, Category } from '../models/Series';
 
 interface SeriesEditProps {
   series: Series;
   isEditMode: boolean;
   onSave: (series: Series) => void;
   onCancel: () => void;
+  categories: Category[];
 }
 
-const SeriesEdit: React.FC<SeriesEditProps> = ({ series, isEditMode, onSave, onCancel }) => {
+const SeriesEdit: React.FC<SeriesEditProps> = ({
+  series,
+  isEditMode,
+  onSave,
+  onCancel,
+  categories,
+}) => {
   const [formData, setFormData] = useState<Series>(series);
   const [currentEpisode, setCurrentEpisode] = useState<Episode | null>(null);
   const [isEpisodeEditorVisible, setIsEpisodeEditorVisible] = useState(false);
@@ -53,6 +60,21 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({ series, isEditMode, onSave, onC
   const handleDeleteEpisode = (index: number) => {
     const updatedEpisodes = formData.episodes.filter((_, i) => i !== index);
     setFormData({ ...formData, episodes: updatedEpisodes });
+  };
+
+  const handleCategoryChange = (category: Category) => {
+    const isSelected = formData.categories.some((c) => c.id === category.id);
+    if (isSelected) {
+      setFormData({
+        ...formData,
+        categories: formData.categories.filter((c) => c.id !== category.id),
+      });
+    } else {
+      setFormData({
+        ...formData,
+        categories: [...formData.categories, category],
+      });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -109,6 +131,21 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({ series, isEditMode, onSave, onC
             step="0.1"
             required
           />
+        </div>
+        <div>
+          <h4>Categories</h4>
+          {categories.map((category) => (
+            <div key={category.id}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={formData.categories.some((c) => c.id === category.id)}
+                  onChange={() => handleCategoryChange(category)}
+                />
+                {category.title}
+              </label>
+            </div>
+          ))}
         </div>
         <div>
           <h4>Episodes</h4>

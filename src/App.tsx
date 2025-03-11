@@ -34,7 +34,7 @@ const App: React.FC = () => {
   ]);
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
-  const [categories, setCategories] = useState<Category[]>([]); // Состояние для категорий
+  const [categories, setCategories] = useState<Category[]>([]);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
@@ -90,7 +90,6 @@ const App: React.FC = () => {
     setRoles([...roles, role]);
   };
 
-  // Логика для работы с категориями
   const handleAddCategory = (category: Category) => {
     setCategories([...categories, category]);
   };
@@ -136,6 +135,7 @@ const App: React.FC = () => {
                     onAddSeries={handleAddSeries}
                     onEditSeries={handleEditSeries}
                     onDeleteSeries={handleDeleteSeries}
+                    categories={categories}
                   />
                 }
               />

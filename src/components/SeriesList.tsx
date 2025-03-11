@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import SeriesEdit from './SeriesEdit';
-import { Series } from '../models/Series';
+import { Series, Category } from '../models/Series';
 
 interface SeriesListProps {
   seriesList: Series[];
   onAddSeries: (series: Series) => void;
   onEditSeries: (series: Series, index: number) => void;
   onDeleteSeries: (index: number) => void;
+  categories: Category[];
 }
 
-const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEditSeries, onDeleteSeries }) => {
+const SeriesList: React.FC<SeriesListProps> = ({
+  seriesList,
+  onAddSeries,
+  onEditSeries,
+  onDeleteSeries,
+  categories,
+}) => {
   const [currentSeries, setCurrentSeries] = useState<Series>({
     id: 0,
     title: '',
@@ -17,6 +24,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
     releaseDate: new Date().toISOString().split('T')[0],
     rating: 0,
     episodes: [],
+    categories: [],
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -30,6 +38,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
       releaseDate: new Date().toISOString().split('T')[0],
       rating: 0,
       episodes: [],
+      categories: [],
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
@@ -66,6 +75,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
             <th>Release Date</th>
             <th>Rating</th>
             <th>Episodes</th>
+            <th>Categories</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -84,6 +94,13 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
                 </ul>
               </td>
               <td>
+                <ul>
+                  {series.categories.map((category) => (
+                    <li key={category.id}>{category.title}</li>
+                  ))}
+                </ul>
+              </td>
+              <td>
                 <button onClick={() => startEditing(series, index)}>Edit</button>
                 <button onClick={() => onDeleteSeries(index)}>Delete</button>
               </td>
@@ -97,6 +114,7 @@ const SeriesList: React.FC<SeriesListProps> = ({ seriesList, onAddSeries, onEdit
           isEditMode={isEditMode}
           onSave={saveSeries}
           onCancel={cancelEdit}
+          categories={categories}
         />
       )}
     </div>

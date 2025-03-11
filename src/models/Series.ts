@@ -13,6 +13,7 @@ export interface Series {
   releaseDate: string;
   rating: number;
   episodes: Episode[];
+  categories: Category[];
 }
 
 export interface Category{
