@@ -105,6 +105,29 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
     }
   };
 
+  const handleEpisodeVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      const file = files[0];
+  
+      const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Wrong format! Only MP4, AVI, MKV permitted.");
+        return;
+      }
+  
+      const maxSize = 500 * 1024 * 1024; // 500MB
+      if (file.size > maxSize) {
+        alert("File is bigger than 500MB!");
+        return;
+      }
+  
+      const fileUrl = URL.createObjectURL(file);
+  
+      setCurrentEpisode({ ...currentEpisode!, videoPath: fileUrl });
+    }
+  };  
+
   return (
     <div>
       <h3>{isEditMode ? 'Edit Series' : 'Add Series'}</h3>
@@ -184,6 +207,7 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
             {formData.episodes.map((episode, index) => (
               <li key={episode.id}>
                 <span>{episode.title}</span>
+                <p>{episode.videoPath ? <a href={episode.videoPath} target="_blank">Watch video</a> : "No video"}</p>
                 <button type="button" onClick={() => handleEditEpisode(index)}>
                   Edit
                 </button>
@@ -251,6 +275,11 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
                 onChange={handleEpisodeChange}
                 required
               />
+            </div>
+            <div>
+              <label htmlFor="episode-video">Upload Video</label>
+              <input type="file" id="episode-video" accept="video/*" onChange={handleEpisodeVideoChange} />
+              {currentEpisode?.videoPath && <p>Uploaded: {currentEpisode.videoPath}</p>}
             </div>
             <button type="submit">Save Episode</button>
             <button type="button" onClick={() => setIsEpisodeEditorVisible(false)}>
