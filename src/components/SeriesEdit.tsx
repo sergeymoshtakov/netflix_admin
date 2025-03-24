@@ -82,6 +82,29 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
     onSave(formData);
   };
 
+  const handleTrailerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      const file = files[0];
+
+      const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Wrong format! Only MP4, AVI, MKV permited.");
+        return;
+      }
+
+      const maxSize = 500 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("File is bigger than 500MB!");
+        return;
+      }
+
+      const fileUrl = URL.createObjectURL(file);
+
+      setFormData({ ...formData, trailerPath: fileUrl });
+    }
+  };
+
   return (
     <div>
       <h3>{isEditMode ? 'Edit Series' : 'Add Series'}</h3>
@@ -146,6 +169,11 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
               </label>
             </div>
           ))}
+        </div>
+        <div>
+        <label htmlFor="trailer">Upload trailer</label>
+        <input type="file" id="trailer" accept="video/*" onChange={handleTrailerChange} />
+          {formData.trailerPath && <p>Uploaded: {formData.trailerPath}</p>}
         </div>
         <div>
           <h4>Episodes</h4>

@@ -4,6 +4,7 @@ export interface Episode {
   description: string;
   duration: number;
   releaseDate: string;
+  videoPath?: string;
 }
   
 export interface Series {
@@ -14,6 +15,7 @@ export interface Series {
   rating: number;
   episodes: Episode[];
   categories: Category[];
+  trailerPath?: string;
 }
 
 export interface Category{

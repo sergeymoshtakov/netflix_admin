@@ -76,6 +76,7 @@ const SeriesList: React.FC<SeriesListProps> = ({
             <th>Rating</th>
             <th>Episodes</th>
             <th>Categories</th>
+            <th>Trailer</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -99,6 +100,9 @@ const SeriesList: React.FC<SeriesListProps> = ({
                     <li key={category.id}>{category.title}</li>
                   ))}
                 </ul>
+              </td>
+              <td>
+                {series.trailerPath ? <a href={series.trailerPath} target="_blank">Watch trailer</a> : "No trailer"}
               </td>
               <td>
                 <button onClick={() => startEditing(series, index)}>Edit</button>
