@@ -62,21 +62,6 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
     setFormData({ ...formData, episodes: updatedEpisodes });
   };
 
-  const handleCategoryChange = (category: Category) => {
-    const isSelected = formData.categories.some((c) => c.id === category.id);
-    if (isSelected) {
-      setFormData({
-        ...formData,
-        categories: formData.categories.filter((c) => c.id !== category.id),
-      });
-    } else {
-      setFormData({
-        ...formData,
-        categories: [...formData.categories, category],
-      });
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData);
@@ -179,19 +164,23 @@ const SeriesEdit: React.FC<SeriesEditProps> = ({
           />
         </div>
         <div>
-          <h4>Categories</h4>
+          <label htmlFor="categories">Categories</label>
+          <select
+            id="categories"
+            multiple
+            value={formData.categories.map((c) => c.id.toString())}
+            onChange={(e) => {
+              const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
+              const selectedCategories = categories.filter((category) => selectedIds.includes(category.id));
+              setFormData({ ...formData, categories: selectedCategories });
+            }}
+          >
           {categories.map((category) => (
-            <div key={category.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={formData.categories.some((c) => c.id === category.id)}
-                  onChange={() => handleCategoryChange(category)}
-                />
-                {category.title}
-              </label>
-            </div>
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
           ))}
+          </select>
         </div>
         <div>
         <label htmlFor="trailer">Upload trailer</label>

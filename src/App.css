@@ -28,9 +28,6 @@ button:hover{
   padding: 10px;
 }
 
-.user-form {
-  width: 40%;
-}
 
 @media only screen and (max-width: 1400px) {
   .user-form {
@@ -87,74 +84,6 @@ table button:hover {
   background-color: rgb(0, 238, 255);
 }
 
-/* .add-role-form {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  background-color: #1e1e1e;
-}
-
-.add-role-form input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #333;
-  border-radius: 4px;
-  background-color: #333;
-  color: white;
-}
-
-.add-role-form button {
-  margin-right: 10px;
-  background-color: #1e8e95;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.add-role-form button:hover {
-  background-color: #27b9c3;
-}
-
-.role-edit-form {
-  margin-top: 20px;
-  padding: 20px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  background-color: #1e1e1e;
-}
-
-.role-edit-form label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.role-edit-form input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #333;
-  border-radius: 4px;
-  background-color: #333;
-  color: white;
-}
-
-.role-edit-form button {
-  margin-right: 10px;
-  background-color: #1e8e95;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 16px;
-  cursor: pointer;
-}
-
-.role-edit-form button:hover {
-  background-color: #27b9c3;
-} */
-
 nav ul {
   list-style: none;
   padding: 0;
@@ -177,4 +106,53 @@ nav ul li a:hover {
 .user-list table td[data-status="banned"] {
   color: red;
   font-weight: bold;
+}
+
+.user-form, 
+.series-form,
+.roles-form {
+  width: 40%;
+  background-color: black;
+  padding: 20px;
+}
+
+.user-form div, 
+.series-form div
+.roles-form div {
+  margin-bottom: 15px;
+}
+
+.roles-form form{
+  background-color: black;
+}
+
+.user-form label, 
+.series-form label,
+.roles-form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.user-form input,
+.user-form select,
+.series-form input,
+.series-form select,
+.series-form textarea,
+.roles-form input{
+  background-color: white;
+  color: black;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+.series-form input[type="file"]{
+  background-color: black;
+}
+
+.user-form input[type="checkbox"],
+.series-form input[type="checkbox"]{
+  width: auto;
+  margin-right: 5px;
 }

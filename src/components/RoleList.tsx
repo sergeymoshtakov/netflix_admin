@@ -51,7 +51,7 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
       </button>
 
       {isAddFormVisible && (
-        <div className="add-role-form">
+        <div className="roles-form">
           <h3>Add New Role</h3>
           <input
             type="text"
@@ -88,7 +88,7 @@ const RoleList: React.FC<RoleListProps> = ({ roles, onEditRole, onDeleteRole, on
       </table>
 
       {editingRole && (
-        <div className="role-edit-form">
+        <div className="roles-form">
           <h3>Edit Role</h3>
           <form
             onSubmit={(e) => {

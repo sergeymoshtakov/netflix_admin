@@ -36,8 +36,9 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
 
   return (
     <div>
-      <h3>{isEditMode ? 'Edit User' : 'Add User'}</h3>
       <form className="user-form" onSubmit={handleSubmit}>
+        <h3>{isEditMode ? 'Edit User' : 'Add User'}</h3>
+        <br/>
         <div>
           <label htmlFor="username">Username</label>
           <input
@@ -126,7 +127,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
           </label>
         </div>
         <div>
-          <h4>Roles</h4>
+          <label>Roles</label>
           {roles.map((role) => (
             <div key={role.id}>
               <label>
