@@ -110,7 +110,8 @@ nav ul li a:hover {
 
 .user-form, 
 .series-form,
-.roles-form {
+.roles-form,
+.category-form {
   width: 40%;
   background-color: black;
   padding: 20px;
@@ -118,7 +119,8 @@ nav ul li a:hover {
 
 .user-form div, 
 .series-form div
-.roles-form div {
+.roles-form div,
+.category-form div {
   margin-bottom: 15px;
 }
 
@@ -128,7 +130,8 @@ nav ul li a:hover {
 
 .user-form label, 
 .series-form label,
-.roles-form label {
+.roles-form label,
+.category-form label{
   display: block;
   margin-bottom: 5px;
 }
@@ -138,7 +141,8 @@ nav ul li a:hover {
 .series-form input,
 .series-form select,
 .series-form textarea,
-.roles-form input{
+.roles-form input,
+.category-form input{
   background-color: white;
   color: black;
   width: 100%;
