@@ -27,13 +27,13 @@ const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
             <Link to="/">User List</Link>
           </li>
           <li>
-            <Link to="/series">Series List</Link>
+            <Link to="/series">Content</Link>
           </li>
           <li>
             <Link to="/roles">Roles</Link>
           </li>
           <li>
-            <Link to="/categories">Categories</Link>
+            <Link to="/categories">Genres</Link>
           </li>
         </ul>
       </nav>

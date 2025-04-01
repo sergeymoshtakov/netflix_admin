@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
-import UserList from './components/UserList';
-import SeriesList from './components/SeriesList';
-import RoleList from './components/RoleList';
-import CategoryList from './components/CategoryList';
+import UserList from './components/user/UserList';
+import ContentList from './components/content/ContentList';
+import RoleList from './components/role/RoleList';
+import GenreList from './components/genre/GenreList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Series, Category } from './models/Series';
+import { Content, Genre } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -32,9 +32,9 @@ const App: React.FC = () => {
       isBanned: false,
     },
   ]);
-  const [seriesList, setSeriesList] = useState<Series[]>([]);
+  const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
@@ -60,19 +60,19 @@ const App: React.FC = () => {
     setUsers(updatedUsers);
   };
 
-  const handleAddSeries = (series: Series) => {
-    setSeriesList([...seriesList, series]);
+  const handleAddContent = (content: Content) => {
+    setContentList([...contentList, content]);
   };
 
-  const handleEditSeries = (series: Series, index: number) => {
-    const updatedSeries = [...seriesList];
-    updatedSeries[index] = series;
-    setSeriesList(updatedSeries);
+  const handleEditContent = (content: Content, index: number) => {
+    const updatedSeries = [...contentList];
+    updatedSeries[index] = content;
+    setContentList(updatedSeries);
   };
 
-  const handleDeleteSeries = (index: number) => {
-    const updatedSeries = seriesList.filter((_, i) => i !== index);
-    setSeriesList(updatedSeries);
+  const handleDeleteContent = (index: number) => {
+    const updatedContent = contentList.filter((_, i) => i !== index);
+    setContentList(updatedContent);
   };
 
   const handleEditRole = (role: Role, index: number) => {
@@ -90,19 +90,19 @@ const App: React.FC = () => {
     setRoles([...roles, role]);
   };
 
-  const handleAddCategory = (category: Category) => {
-    setCategories([...categories, category]);
+  const handleAddGenre = (genre: Genre) => {
+    setGenres([...genres, genre]);
   };
 
-  const handleEditCategory = (category: Category, index: number) => {
-    const updatedCategories = [...categories];
-    updatedCategories[index] = category;
-    setCategories(updatedCategories);
+  const handleEditGenre = (genre: Genre, index: number) => {
+    const updatedGenres = [...genres];
+    updatedGenres[index] = genre;
+    setGenres(updatedGenres);
   };
 
-  const handleDeleteCategory = (index: number) => {
-    const updatedCategories = categories.filter((_, i) => i !== index);
-    setCategories(updatedCategories);
+  const handleDeleteGenre = (index: number) => {
+    const updatedGenres = genres.filter((_, i) => i !== index);
+    setGenres(updatedGenres);
   };
 
   return (
@@ -130,12 +130,12 @@ const App: React.FC = () => {
               <Route
                 path="/series"
                 element={
-                  <SeriesList
-                    seriesList={seriesList}
-                    onAddSeries={handleAddSeries}
-                    onEditSeries={handleEditSeries}
-                    onDeleteSeries={handleDeleteSeries}
-                    categories={categories}
+                  <ContentList
+                    contentList={contentList}
+                    onAddContent={handleAddContent}
+                    onEditContent={handleEditContent}
+                    onDeleteContent={handleDeleteContent}
+                    genres={genres}
                   />
                 }
               />
@@ -153,11 +153,11 @@ const App: React.FC = () => {
               <Route
                 path="/categories"
                 element={
-                  <CategoryList
-                    categories={categories}
-                    onAddCategory={handleAddCategory}
-                    onEditCategory={handleEditCategory}
-                    onDeleteCategory={handleDeleteCategory}
+                  <GenreList
+                    genres={genres}
+                    onAddGenre={handleAddGenre}
+                    onEditGenre={handleEditGenre}
+                    onDeleteGenre={handleDeleteGenre}
                   />
                 }
               />

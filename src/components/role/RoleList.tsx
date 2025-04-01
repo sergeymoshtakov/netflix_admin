@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Role } from '../models/AppUser';
+import { Role } from '../../models/AppUser';
 
 interface RoleListProps {
   roles: Role[];

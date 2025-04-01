@@ -1,30 +1,67 @@
+export interface ContentType {
+  id: number;
+  name: string;
+}
+
+export interface Content {
+  id: number;
+  name: string;
+  contentTypeId: number;
+  posterUrl?: string;
+  trailerUrl?: string;
+  videoUrl?: string;
+  description?: string;
+  durationMin?: number;
+  ageRating?: string;
+  releaseDate?: string;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  genres?: Genre[];
+  actors?: Actor[];
+  episodes?: Episode[];
+}
+
 export interface Episode {
   id: number;
-  title: string;
-  description: string;
-  duration: number;
-  releaseDate: string;
-  videoPath?: string;
-}
-  
-export interface Series {
-  id: number;
-  title: string;
-  description: string;
-  releaseDate: string;
-  rating: number;
-  episodes: Episode[];
-  categories: Category[];
-  trailerPath?: string;
+  name: string;
+  contentId: number;
+  seasonNumber: number;
+  episodeNumber: number;
+  durationMin?: number;
+  description?: string;
+  trailerUrl?: string;
+  videoUrl?: string;
+  releaseDate?: string;
+  createdAt?: string;
 }
 
-export interface Category{
+export interface Genre {
   id: number;
-  title: string;
+  name: string;
 }
 
-export interface SeriesCategory{
+export interface Actor {
   id: number;
-  series_id: number;
-  category_id: number;
+  name: string;
+  surname: string;
+}
+
+export interface ContentGenre {
+  id: number;
+  contentId: number;
+  genreId: number;
+}
+
+export interface ContentActor {
+  id: number;
+  contentId: number;
+  actorId: number;
+}
+
+export interface WishList {
+  id: number;
+  userId: number;
+  contentId: number;
+  createdAt?: string;
 }

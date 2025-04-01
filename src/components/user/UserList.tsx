@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import UserEdit from './UserEdit';
-import RoleEdit from './RoleEdit';
-import { AppUser, Role } from '../models/AppUser';
+import RoleEdit from '../role/RoleEdit';
+import { AppUser, Role } from '../../models/AppUser';
 
 interface UserListProps {
   users: AppUser[];

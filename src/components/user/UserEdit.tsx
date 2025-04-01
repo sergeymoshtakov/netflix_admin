@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppUser, Role } from '../models/AppUser';
+import { AppUser, Role } from '../../models/AppUser';
 
 interface UserEditProps {
   user: AppUser;

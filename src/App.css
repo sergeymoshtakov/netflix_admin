@@ -41,7 +41,7 @@ button:hover{
   }
 }
 
-.user-list, .series-list, .role-list {
+.user-list, .content-list, .role-list, .genre-list {
   padding: 10px;
 }
 
@@ -109,18 +109,18 @@ nav ul li a:hover {
 }
 
 .user-form, 
-.series-form,
+.content-form,
 .roles-form,
-.category-form {
+.genre-form {
   width: 40%;
   background-color: black;
   padding: 20px;
 }
 
 .user-form div, 
-.series-form div
+.content-form div
 .roles-form div,
-.category-form div {
+.genre-form div {
   margin-bottom: 15px;
 }
 
@@ -129,20 +129,20 @@ nav ul li a:hover {
 }
 
 .user-form label, 
-.series-form label,
+.content-form label,
 .roles-form label,
-.category-form label{
+.genre-form label{
   display: block;
   margin-bottom: 5px;
 }
 
 .user-form input,
 .user-form select,
-.series-form input,
-.series-form select,
-.series-form textarea,
+.content-form input,
+.content-form select,
+.content-form textarea,
 .roles-form input,
-.category-form input{
+.genre-form input{
   background-color: white;
   color: black;
   width: 100%;
@@ -151,12 +151,12 @@ nav ul li a:hover {
   border: none;
 }
 
-.series-form input[type="file"]{
+.content-form input[type="file"]{
   background-color: black;
 }
 
 .user-form input[type="checkbox"],
-.series-form input[type="checkbox"]{
+.content-form input[type="checkbox"]{
   width: auto;
   margin-right: 5px;
 }
