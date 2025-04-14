@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ContentEdit from "./ContentEdit";
-import { Content, Genre } from '../../models/Series';
+import { Content, Genre, ContentType } from '../../models/Series';
 
 interface ContentListProps {
   contentList: Content[];
@@ -8,6 +8,7 @@ interface ContentListProps {
   onEditContent: (content: Content, index: number) => void;
   onDeleteContent: (index: number) => void;
   genres: Genre[];
+  contentTypes: ContentType[];
 }
 
 const ContentList: React.FC<ContentListProps> = ({
@@ -16,6 +17,7 @@ const ContentList: React.FC<ContentListProps> = ({
   onEditContent,
   onDeleteContent,
   genres,
+  contentTypes,
 }) => {
   const [currentContent, setCurrentContent] = useState<Content>({
     id: 0,
@@ -76,36 +78,45 @@ const ContentList: React.FC<ContentListProps> = ({
         <thead>
           <tr>
             <th>Name</th>
-            <th>Description</th>
-            <th>Release Date</th>
-            <th>Duration</th>
-            <th>Age Rating</th>
-            <th>Genres</th>
+            <th>Content type</th>
+            <th>Poster URL</th>
+            <th>Age rating</th>
+            <th>Is active</th>
+            <th>Created At</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {contentList.map((content, index) => (
+        {contentList.map((content, index) => {
+          const contentType = contentTypes.find(type => type.id === content.contentTypeId);
+
+          return (
             <tr key={content.id}>
               <td>{content.name}</td>
-              <td>{content.description}</td>
-              <td>{content.releaseDate}</td>
-              <td>{content.durationMin} min</td>
-              <td>{content.ageRating}</td>
+              <td>{contentType ? contentType.name : 'Unknown'}</td>
               <td>
-                <ul>
-                  {content.genres?.map((genre) => (
-                    <li key={genre.id}>{genre.name}</li>
-                  ))}
-                </ul>
+                {content.posterUrl ? (
+                  <a href={content.posterUrl} target="_blank" rel="noopener noreferrer">
+                    View Poster
+                  </a>
+                ) : (
+                  'No poster'
+                )}
               </td>
+              <td>{content.ageRating || '-'}</td>
+              <td data-status={content.isActive ? "active" : "notactive"}>
+                {content.isActive ? 'Yes' : 'No'}
+              </td>
+              <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString() : '-'}</td>
               <td>
                 <button onClick={() => startEditing(content, index)}>Edit</button>
                 <button onClick={() => onDeleteContent(index)}>Delete</button>
               </td>
             </tr>
-          ))}
-        </tbody>
+          );
+        })}
+      </tbody>
+
       </table>
       {isEditorVisible && (
         <ContentEdit
@@ -114,6 +125,7 @@ const ContentList: React.FC<ContentListProps> = ({
           onSave={saveContent}
           onCancel={cancelEdit}
           genres={genres}
+          contentTypes={contentTypes}
         />
       )}
     </div>

@@ -108,6 +108,16 @@ nav ul li a:hover {
   font-weight: bold;
 }
 
+.content-list table td[data-status="notactive"] {
+  color: red;
+  font-weight: bold;
+}
+
+.content-list table td[data-status="active"] {
+  color: green;
+  font-weight: bold;
+}
+
 .user-form, 
 .content-form,
 .roles-form,

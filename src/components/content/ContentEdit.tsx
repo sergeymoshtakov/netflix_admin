@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Genre } from '../../models/Series';
+import { Content, Genre, ContentType } from '../../models/Series';
 
 interface ContentEditProps {
   content: Content;
@@ -7,6 +7,7 @@ interface ContentEditProps {
   onSave: (content: Content) => void;
   onCancel: () => void;
   genres: Genre[];
+  contentTypes: ContentType[];
 }
 
 const ContentEdit: React.FC<ContentEditProps> = ({
@@ -15,6 +16,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   onSave,
   onCancel,
   genres,
+  contentTypes,
 }) => {
   const [formData, setFormData] = useState<Content>(content);
 
@@ -115,15 +117,21 @@ const ContentEdit: React.FC<ContentEditProps> = ({
         </div>
         
         <div>
-          <label htmlFor="contentTypeId">Content Type ID</label>
-          <input 
-            type="number" 
-            id="contentTypeId" 
-            name="contentTypeId" 
-            value={formData.contentTypeId} 
-            onChange={handleChange} 
-            required 
-          />
+          <label htmlFor="contentTypeId">Content Type</label>
+          <select
+            id="contentTypeId"
+            name="contentTypeId"
+            value={formData.contentTypeId}
+            onChange={(e) => setFormData({ ...formData, contentTypeId: Number(e.target.value) })}
+            required
+          >
+          <option value="">-- Select Type --</option>
+            {contentTypes.map((type) => (
+              <option key={type.id} value={type.id}>
+                {type.name}
+              </option>
+            ))}
+          </select>
         </div>
         
         <div>

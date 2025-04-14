@@ -168,6 +168,7 @@ const App: React.FC = () => {
                     onEditContent={handleEditContent}
                     onDeleteContent={handleDeleteContent}
                     genres={genres}
+                    contentTypes={contentTypes}
                   />
                 }
               />
