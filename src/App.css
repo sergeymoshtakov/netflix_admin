@@ -41,7 +41,7 @@ button:hover{
   }
 }
 
-.user-list, .content-list, .role-list, .genre-list {
+.user-list, .content-list, .role-list, .genre-list, .content-type-list {
   padding: 10px;
 }
 
@@ -111,7 +111,8 @@ nav ul li a:hover {
 .user-form, 
 .content-form,
 .roles-form,
-.genre-form {
+.genre-form,
+.content-type-form {
   width: 40%;
   background-color: black;
   padding: 20px;
@@ -120,7 +121,8 @@ nav ul li a:hover {
 .user-form div, 
 .content-form div
 .roles-form div,
-.genre-form div {
+.genre-form div,
+.content-type-form div {
   margin-bottom: 15px;
 }
 
@@ -131,7 +133,8 @@ nav ul li a:hover {
 .user-form label, 
 .content-form label,
 .roles-form label,
-.genre-form label{
+.genre-form label,
+.content-type-form label{
   display: block;
   margin-bottom: 5px;
 }
@@ -142,7 +145,9 @@ nav ul li a:hover {
 .content-form select,
 .content-form textarea,
 .roles-form input,
-.genre-form input{
+.genre-form input,
+.content-type-form textarea,
+.content-type-form input{
   background-color: white;
   color: black;
   width: 100%;

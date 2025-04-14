@@ -1,6 +1,8 @@
 export interface ContentType {
   id: number;
   name: string;
+  description: string;
+  tags: string;
 }
 
 export interface Content {

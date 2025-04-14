@@ -5,9 +5,10 @@ import UserList from './components/user/UserList';
 import ContentList from './components/content/ContentList';
 import RoleList from './components/role/RoleList';
 import GenreList from './components/genre/GenreList';
+import ContentTypeList from './components/contentType/ContentTypeList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Content, Genre } from './models/Series';
+import { Content, ContentType, Genre } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -35,6 +36,7 @@ const App: React.FC = () => {
   const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [contentTypes, setContentTypes] = useState<ContentType[]>([]);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
@@ -105,6 +107,21 @@ const App: React.FC = () => {
     setGenres(updatedGenres);
   };
 
+  const handleAddContentType = (contentType: ContentType) => {
+    setContentTypes([...contentTypes, contentType]);
+  };
+
+  const handleEditContentType = (contentType: ContentType, index: number) => {
+    const updatedContentTypes = [...contentTypes];
+    updatedContentTypes[index] = contentType;
+    setContentTypes(updatedContentTypes);
+  };
+
+  const handleDeleteContentType = (index: number) => {
+    const updatedContentTypes = contentTypes.filter((_, i) => i !== index);
+    setContentTypes(updatedContentTypes);
+  };
+
   return (
     <Router>
       <div>
@@ -158,6 +175,17 @@ const App: React.FC = () => {
                     onAddGenre={handleAddGenre}
                     onEditGenre={handleEditGenre}
                     onDeleteGenre={handleDeleteGenre}
+                  />
+                }
+              />
+              <Route
+                path="/contentTypes"
+                element={
+                  <ContentTypeList
+                    contentTypes={contentTypes}
+                    onAddContentType={handleAddContentType}
+                    onEditContentType={handleEditContentType}
+                    onDeleteContentType={handleDeleteContentType}
                   />
                 }
               />
