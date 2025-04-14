@@ -47,6 +47,7 @@ export interface Actor {
   id: number;
   name: string;
   surname: string;
+  biography?: string;
 }
 
 export interface ContentGenre {

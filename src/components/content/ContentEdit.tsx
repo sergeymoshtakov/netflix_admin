@@ -31,6 +31,8 @@ const ContentEdit: React.FC<ContentEditProps> = ({
     setFormData({ ...formData, genres: selectedGenres });
   };
 
+  const getNowISOString = () => new Date().toISOString();
+
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length > 0) {
@@ -104,7 +106,15 @@ const ContentEdit: React.FC<ContentEditProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+
+    const now = getNowISOString();
+    const updatedContent = {
+      ...formData,
+      updatedAt: now,
+      createdAt: isEditMode ? formData.createdAt : now,
+    };
+
+    onSave(updatedContent);
   };
 
   return (
@@ -146,7 +156,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
         
         <div>
           <label htmlFor="durationMin">Duration (min)</label>
-          <input type="number" id="durationMin" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} required />
+          <input type="number" id="durationMin" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} required min="0" />
         </div>
         
         <div>

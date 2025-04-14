@@ -6,9 +6,10 @@ import ContentList from './components/content/ContentList';
 import RoleList from './components/role/RoleList';
 import GenreList from './components/genre/GenreList';
 import ContentTypeList from './components/contentType/ContentTypeList';
+import ActorList from './components/actor/ActorList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Content, ContentType, Genre } from './models/Series';
+import { Content, ContentType, Genre, Actor } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -53,6 +54,7 @@ const App: React.FC = () => {
   const [genres, setGenres] = useState<Genre[]>([]);
   const [contentTypes, setContentTypes] = useState<ContentType[]>(initialContentTypes);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
+  const [actors, setActors] = useState<Actor[]>([]);
 
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
@@ -137,6 +139,21 @@ const App: React.FC = () => {
     setContentTypes(updatedContentTypes);
   };
 
+  const handleAddActor = (actor: Actor) => {
+    setActors([...actors, actor]);
+  };
+
+  const handleEditActor = (actor: Actor, index: number) => {
+    const updatedActor = [...actors];
+    updatedActor[index] = actor;
+    setActors(updatedActor);
+  };
+
+  const handleDeleteActor = (index: number) => {
+    const updatedActor = actors.filter((_, i) => i !== index);
+    setActors(updatedActor);
+  };
+
   return (
     <Router>
       <div>
@@ -202,6 +219,17 @@ const App: React.FC = () => {
                     onAddContentType={handleAddContentType}
                     onEditContentType={handleEditContentType}
                     onDeleteContentType={handleDeleteContentType}
+                  />
+                }
+              />
+              <Route
+                path="/actors"
+                element={
+                  <ActorList
+                    actors={actors}
+                    onAddActor={handleAddActor}
+                    onEditActor={handleEditActor}
+                    onDeleteActor={handleDeleteActor}
                   />
                 }
               />
