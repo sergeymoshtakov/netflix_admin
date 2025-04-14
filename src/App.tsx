@@ -17,6 +17,21 @@ const App: React.FC = () => {
     { id: 2, name: 'user' },
   ];
 
+  const initialContentTypes: ContentType[] = [
+    {
+      id: 1,
+      name: 'TV Series',
+      description: 'A multi-episode audiovisual production released in parts.',
+      tags: 'series,episodes,show,tv'
+    },
+    {
+      id: 2,
+      name: 'Movie',
+      description: 'A feature-length audiovisual production with a complete storyline.',
+      tags: 'movie,film,cinema,feature'
+    }
+  ];
+
   const [users, setUsers] = useState<AppUser[]>([
     {
       id: 1,
@@ -36,7 +51,7 @@ const App: React.FC = () => {
   const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [contentTypes, setContentTypes] = useState<ContentType[]>([]);
+  const [contentTypes, setContentTypes] = useState<ContentType[]>(initialContentTypes);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
 
   const handleLogin = (user: AppUser) => {
