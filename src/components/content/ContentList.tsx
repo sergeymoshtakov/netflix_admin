@@ -109,7 +109,7 @@ const ContentList: React.FC<ContentListProps> = ({
               <td data-status={content.isActive ? "active" : "notactive"}>
                 {content.isActive ? 'Yes' : 'No'}
               </td>
-              <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString() : '-'}</td>
+              <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString('en-US') : '-'}</td>
               <td>
                 <button onClick={() => startEditing(content, index)}>Edit</button>
                 <button onClick={() => onDeleteContent(index)}>Delete</button>

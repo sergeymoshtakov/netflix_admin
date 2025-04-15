@@ -33,8 +33,6 @@ const ContentEdit: React.FC<ContentEditProps> = ({
     setFormData({ ...formData, genres: selectedGenres });
   };
 
-  const getNowISOString = () => new Date().toISOString();
-
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length > 0) {
@@ -114,15 +112,19 @@ const ContentEdit: React.FC<ContentEditProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const now = getNowISOString();
-    const updatedContent = {
+    const now = new Date().toISOString();
+  
+    const isoReleaseDate = formData.releaseDate
+      ? new Date(formData.releaseDate).toISOString()
+      : undefined;
+  
+    const dataToSave = {
       ...formData,
+      releaseDate: isoReleaseDate,
       updatedAt: now,
       createdAt: isEditMode ? formData.createdAt : now,
     };
-
-    onSave(updatedContent);
+    onSave(dataToSave);
   };
 
   return (
@@ -159,7 +161,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
         
         <div>
           <label htmlFor="releaseDate">Release Date</label>
-          <input type="date" id="releaseDate" name="releaseDate" value={formData.releaseDate || ''} onChange={handleChange} required />
+          <input type="date" id="releaseDate" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} required />
         </div>
         
         <div>

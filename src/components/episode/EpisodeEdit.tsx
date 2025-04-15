@@ -54,8 +54,14 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const now = new Date().toISOString();
+
+    const isoReleaseDate = formData.releaseDate
+      ? new Date(formData.releaseDate).toISOString()
+      : undefined;
+
     const dataToSave = {
       ...formData,
+      releaseDate: isoReleaseDate,
       createdAt: isEditMode ? formData.createdAt : now,
     };
     onSave(dataToSave);
@@ -127,7 +133,7 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
 
         <div>
           <label>Release Date</label>
-          <input type="date" name="releaseDate" value={formData.releaseDate || ''} onChange={handleChange} />
+          <input type="date" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} />
         </div>
 
         <div>

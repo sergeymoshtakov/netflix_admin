@@ -101,7 +101,7 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
               <td>{ep.seasonNumber}</td>
               <td>{ep.episodeNumber}</td>
               <td>{ep.durationMin} min</td>
-              <td>{ep.releaseDate || '-'}</td>
+              <td>{ep.releaseDate ? new Date(ep.releaseDate).toLocaleDateString('en-US') : '-'}</td>
               <td>
                 <button onClick={() => startEditing(ep, index)}>Edit</button>
                 <button onClick={() => onDeleteEpisode(index)}>Delete</button>
