@@ -7,9 +7,10 @@ import RoleList from './components/role/RoleList';
 import GenreList from './components/genre/GenreList';
 import ContentTypeList from './components/contentType/ContentTypeList';
 import ActorList from './components/actor/ActorList';
+import EpisodeList from './components/episode/EpisodeList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Content, ContentType, Genre, Actor } from './models/Series';
+import { Content, ContentType, Genre, Actor, Episode } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -55,6 +56,7 @@ const App: React.FC = () => {
   const [contentTypes, setContentTypes] = useState<ContentType[]>(initialContentTypes);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [actors, setActors] = useState<Actor[]>([]);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
 
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
@@ -154,6 +156,21 @@ const App: React.FC = () => {
     setActors(updatedActor);
   };
 
+  const handleAddEpisode = (episode: Episode) => {
+    setEpisodes([...episodes, episode]);
+  };
+
+  const handleEditEpisode = (episode: Episode, index: number) => {
+    const updatedEpisode = [...episodes];
+    updatedEpisode[index] = episode;
+    setEpisodes(updatedEpisode);
+  };
+
+  const handleDeleteEpisode = (index: number) => {
+    const updatedEpisode = episodes.filter((_, i) => i !== index);
+    setEpisodes(updatedEpisode);
+  };
+
   return (
     <Router>
       <div>
@@ -230,6 +247,19 @@ const App: React.FC = () => {
                     onAddActor={handleAddActor}
                     onEditActor={handleEditActor}
                     onDeleteActor={handleDeleteActor}
+                  />
+                }
+              />
+              <Route
+                path="/episodes"
+                element={
+                  <EpisodeList
+                    episodes={episodes}
+                    onAddEpisode={handleAddEpisode}
+                    onEditEpisode={handleEditEpisode}
+                    onDeleteEpisode={handleDeleteEpisode}
+                    contentList={contentList}
+                    contentTypes={contentTypes}
                   />
                 }
               />

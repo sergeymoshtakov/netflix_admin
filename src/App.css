@@ -41,7 +41,7 @@ button:hover{
   }
 }
 
-.user-list, .content-list, .role-list, .genre-list, .content-type-list, .actor-list {
+.user-list, .content-list, .role-list, .genre-list, .content-type-list, .actor-list, .episode-list {
   padding: 10px;
 }
 
@@ -123,7 +123,8 @@ nav ul li a:hover {
 .roles-form,
 .genre-form,
 .content-type-form,
-.actor-form {
+.actor-form,
+.episode-form {
   width: 40%;
   background-color: black;
   padding: 20px;
@@ -134,7 +135,8 @@ nav ul li a:hover {
 .roles-form div,
 .genre-form div,
 .content-type-form div,
-.actor-form div {
+.actor-form div,
+.episode-form div {
   margin-bottom: 15px;
 }
 
@@ -147,7 +149,8 @@ nav ul li a:hover {
 .roles-form label,
 .genre-form label,
 .content-type-form label,
-.actor-form label{
+.actor-form label,
+.episode-form label{
   display: block;
   margin-bottom: 5px;
 }
@@ -162,7 +165,10 @@ nav ul li a:hover {
 .content-type-form textarea,
 .content-type-form input,
 .actor-form input,
-.actor-form textarea{
+.actor-form textarea,
+.episode-form input,
+.episode-form textarea,
+.episode-form select{
   background-color: white;
   color: black;
   width: 100%;
@@ -171,7 +177,8 @@ nav ul li a:hover {
   border: none;
 }
 
-.content-form input[type="file"]{
+.content-form input[type="file"],
+.episode-form input[type="file"]{
   background-color: black;
 }
 
