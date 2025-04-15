@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Genre, ContentType } from '../../models/Series';
+import { Content, Genre, ContentType, Actor } from '../../models/Series';
 
 interface ContentEditProps {
   content: Content;
@@ -8,6 +8,7 @@ interface ContentEditProps {
   onCancel: () => void;
   genres: Genre[];
   contentTypes: ContentType[];
+  actors: Actor[];
 }
 
 const ContentEdit: React.FC<ContentEditProps> = ({
@@ -17,6 +18,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   onCancel,
   genres,
   contentTypes,
+  actors,
 }) => {
   const [formData, setFormData] = useState<Content>(content);
 
@@ -53,6 +55,12 @@ const ContentEdit: React.FC<ContentEditProps> = ({
       const fileUrl = URL.createObjectURL(file);
       setFormData({ ...formData, videoUrl: fileUrl });
     }
+  };
+
+  const handleActorsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
+    const selectedActors = actors.filter((actor) => selectedIds.includes(actor.id));
+    setFormData({ ...formData, actors: selectedActors });
   };
 
   const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,6 +192,22 @@ const ContentEdit: React.FC<ContentEditProps> = ({
                 {genre.name}
               </option>
             ))}
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="actors">Actors</label>
+          <select
+            id="actors"
+            multiple
+            value={formData.actors?.map((a) => a.id.toString()) || []}
+            onChange={handleActorsChange}
+          >
+          {actors.map((actor) => (
+            <option key={actor.id} value={actor.id}>
+              {actor.name} {actor.surname}
+            </option>
+          ))}
           </select>
         </div>
         

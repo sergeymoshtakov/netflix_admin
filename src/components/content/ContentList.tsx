@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ContentEdit from "./ContentEdit";
-import { Content, Genre, ContentType } from '../../models/Series';
+import { Content, Genre, ContentType, Actor } from '../../models/Series';
 
 interface ContentListProps {
   contentList: Content[];
@@ -9,6 +9,7 @@ interface ContentListProps {
   onDeleteContent: (index: number) => void;
   genres: Genre[];
   contentTypes: ContentType[];
+  actors: Actor[];
 }
 
 const ContentList: React.FC<ContentListProps> = ({
@@ -18,6 +19,7 @@ const ContentList: React.FC<ContentListProps> = ({
   onDeleteContent,
   genres,
   contentTypes,
+  actors,
 }) => {
   const [currentContent, setCurrentContent] = useState<Content>({
     id: 0,
@@ -126,6 +128,7 @@ const ContentList: React.FC<ContentListProps> = ({
           onCancel={cancelEdit}
           genres={genres}
           contentTypes={contentTypes}
+          actors={actors}
         />
       )}
     </div>

@@ -203,6 +203,7 @@ const App: React.FC = () => {
                     onDeleteContent={handleDeleteContent}
                     genres={genres}
                     contentTypes={contentTypes}
+                    actors={actors}
                   />
                 }
               />
