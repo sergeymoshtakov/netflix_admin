@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Content, Genre, ContentType, Actor } from '../../models/Series';
+import { Content, Genre, ContentType, Actor, Warning } from '../../models/Series';
 
 interface ContentEditProps {
   content: Content;
@@ -9,6 +9,7 @@ interface ContentEditProps {
   genres: Genre[];
   contentTypes: ContentType[];
   actors: Actor[];
+  warnings: Warning[];
 }
 
 const ContentEdit: React.FC<ContentEditProps> = ({
@@ -19,6 +20,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   genres,
   contentTypes,
   actors,
+  warnings,
 }) => {
   const [formData, setFormData] = useState<Content>(content);
 
@@ -59,6 +61,12 @@ const ContentEdit: React.FC<ContentEditProps> = ({
     const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
     const selectedActors = actors.filter((actor) => selectedIds.includes(actor.id));
     setFormData({ ...formData, actors: selectedActors });
+  };
+
+  const handleWarningsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
+    const selectedWarnings = warnings.filter((warning) => selectedIds.includes(warning.id));
+    setFormData({ ...formData, warnings: selectedWarnings });
   };
 
   const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -208,6 +216,22 @@ const ContentEdit: React.FC<ContentEditProps> = ({
           {actors.map((actor) => (
             <option key={actor.id} value={actor.id}>
               {actor.name} {actor.surname}
+            </option>
+          ))}
+          </select>
+        </div>
+
+        <div>
+          <label htmlFor="warnings">Warnings</label>
+          <select
+            id="warnings"
+            multiple
+            value={formData.warnings?.map((a) => a.id.toString()) || []}
+            onChange={handleWarningsChange}
+          >
+          {warnings.map((warning) => (
+            <option key={warning.id} value={warning.id}>
+              {warning.name}
             </option>
           ))}
           </select>

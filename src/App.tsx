@@ -8,9 +8,10 @@ import GenreList from './components/genre/GenreList';
 import ContentTypeList from './components/contentType/ContentTypeList';
 import ActorList from './components/actor/ActorList';
 import EpisodeList from './components/episode/EpisodeList';
+import WarningList from './components/warning/WarningList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
-import { Content, ContentType, Genre, Actor, Episode } from './models/Series';
+import { Content, ContentType, Genre, Actor, Episode, Warning } from './models/Series';
 import './App.css';
 
 const App: React.FC = () => {
@@ -57,6 +58,7 @@ const App: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [actors, setActors] = useState<Actor[]>([]);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [warnings, setWarnings] = useState<Warning[]>([]);
 
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
@@ -171,6 +173,21 @@ const App: React.FC = () => {
     setEpisodes(updatedEpisode);
   };
 
+  const handleAddWarning = (warning: Warning) => {
+    setWarnings([...warnings, warning]);
+  };
+
+  const handleEditWarning = (warning: Warning, index: number) => {
+    const updatedWarning = [...warnings];
+    updatedWarning[index] = warning;
+    setWarnings(updatedWarning);
+  };
+
+  const handleDeleteWarning = (index: number) => {
+    const updatedWarning = warnings.filter((_, i) => i !== index);
+    setWarnings(updatedWarning);
+  };
+
   return (
     <Router>
       <div>
@@ -204,6 +221,7 @@ const App: React.FC = () => {
                     genres={genres}
                     contentTypes={contentTypes}
                     actors={actors}
+                    warnings={warnings}
                   />
                 }
               />
@@ -261,6 +279,17 @@ const App: React.FC = () => {
                     onDeleteEpisode={handleDeleteEpisode}
                     contentList={contentList}
                     contentTypes={contentTypes}
+                  />
+                }
+              />
+              <Route
+                path="/warnings"
+                element={
+                  <WarningList
+                    warnings={warnings}
+                    onAddWarning={handleAddWarning}
+                    onEditWarning={handleEditWarning}
+                    onDeleteWarning={handleDeleteWarning}
                   />
                 }
               />

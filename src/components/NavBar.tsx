@@ -44,6 +44,9 @@ const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
           <li>
             <Link to="/episodes">Episodes</Link>
           </li>
+          <li>
+            <Link to="/warnings">Warnings</Link>
+          </li>
         </ul>
       </nav>
     </div>

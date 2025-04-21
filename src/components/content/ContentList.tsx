@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ContentEdit from "./ContentEdit";
-import { Content, Genre, ContentType, Actor } from '../../models/Series';
+import { Content, Genre, ContentType, Actor, Warning } from '../../models/Series';
 
 interface ContentListProps {
   contentList: Content[];
@@ -10,6 +10,7 @@ interface ContentListProps {
   genres: Genre[];
   contentTypes: ContentType[];
   actors: Actor[];
+  warnings: Warning[];
 }
 
 const ContentList: React.FC<ContentListProps> = ({
@@ -20,6 +21,7 @@ const ContentList: React.FC<ContentListProps> = ({
   genres,
   contentTypes,
   actors,
+  warnings,
 }) => {
   const [currentContent, setCurrentContent] = useState<Content>({
     id: 0,
@@ -31,6 +33,7 @@ const ContentList: React.FC<ContentListProps> = ({
     ageRating: '',
     genres: [],
     episodes: [],
+    warnings: [],
   });
 
   const [isEditorVisible, setIsEditorVisible] = useState(false);
@@ -129,6 +132,7 @@ const ContentList: React.FC<ContentListProps> = ({
           genres={genres}
           contentTypes={contentTypes}
           actors={actors}
+          warnings={warnings}
         />
       )}
     </div>

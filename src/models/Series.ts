@@ -22,6 +22,7 @@ export interface Content {
   genres?: Genre[];
   actors?: Actor[];
   episodes?: Episode[];
+  warnings?: Warning[];
 }
 
 export interface Episode {
@@ -67,4 +68,15 @@ export interface WishList {
   userId: number;
   contentId: number;
   createdAt?: string;
+}
+
+export interface Warning {
+  id: number;
+  name: string;
+}
+
+export interface ContentWarning {
+  id: number;
+  contentId: number;
+  warningId: number;
 }
