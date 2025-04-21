@@ -28,12 +28,12 @@ const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
       </div>
       <nav>
         <ul className={menuOpen ? 'open' : ''}>
-          <li><Link to="/">User List</Link></li>
-          <li><Link to="/series">Content</Link></li>
+          <li><Link to="/">Users</Link></li>
           <li><Link to="/roles">Roles</Link></li>
+          <li><Link to="/series">Content</Link></li>
           <li><Link to="/categories">Genres</Link></li>
           <li><Link to="/contentTypes">Content Types</Link></li>
-          <li><Link to="/Actors">Actors</Link></li>
+          <li><Link to="/actors">Actors</Link></li>
           <li><Link to="/episodes">Episodes</Link></li>
           <li><Link to="/warnings">Warnings</Link></li>
         </ul>

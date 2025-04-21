@@ -75,8 +75,10 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
     setIsEditorVisible(false);
   };
 
-  const getContentName = (id: number) =>
-    contentList.find((c) => c.id === id)?.name || 'Unknown';
+  const getContentName = (id: number) => {
+    const content = contentList.find((c) => +c.id === +id);
+    return content ? content.name : 'Unknown';
+  };
 
   return (
     <div className="episode-list">
