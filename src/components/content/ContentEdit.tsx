@@ -29,88 +29,61 @@ const ContentEdit: React.FC<ContentEditProps> = ({
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleGenreChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
-    const selectedGenres = genres.filter((genre) => selectedIds.includes(genre.id));
-    setFormData({ ...formData, genres: selectedGenres });
-  };
-
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    if (files && files.length > 0) {
-      const file = files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Wrong format! Only MP4, AVI, MKV permitted.");
-        return;
-      }
-
-      const maxSize = 500 * 1024 * 1024; // 500MB
-      if (file.size > maxSize) {
-        alert("File is bigger than 500MB!");
-        return;
-      }
-
-      const fileUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, videoUrl: fileUrl });
+    const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Wrong format! Only MP4, AVI, MKV permitted.");
+      return;
     }
-  };
 
-  const handleActorsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
-    const selectedActors = actors.filter((actor) => selectedIds.includes(actor.id));
-    setFormData({ ...formData, actors: selectedActors });
-  };
+    const maxSize = 500 * 1024 * 1024; // 500MB
+    if (file.size > maxSize) {
+      alert("File is bigger than 500MB!");
+      return;
+    }
 
-  const handleWarningsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedIds = Array.from(e.target.selectedOptions, (option) => Number(option.value));
-    const selectedWarnings = warnings.filter((warning) => selectedIds.includes(warning.id));
-    setFormData({ ...formData, warnings: selectedWarnings });
+    setFormData({ ...formData, videoUrl: URL.createObjectURL(file) });
   };
 
   const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    if (files && files.length > 0) {
-      const file = files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Wrong format! Only JPEG, PNG, GIF permitted.");
-        return;
-      }
-
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        alert("File is bigger than 5MB!");
-        return;
-      }
-
-      const fileUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, posterUrl: fileUrl });
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Wrong format! Only JPEG, PNG, GIF permitted.");
+      return;
     }
+
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      alert("File is bigger than 5MB!");
+      return;
+    }
+
+    setFormData({ ...formData, posterUrl: URL.createObjectURL(file) });
   };
 
   const handleTrailerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    if (files && files.length > 0) {
-      const file = files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-      const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Wrong format! Only MP4, AVI, MKV permitted.");
-        return;
-      }
-
-      const maxSize = 100 * 1024 * 1024; // 100MB
-      if (file.size > maxSize) {
-        alert("File is bigger than 100MB!");
-        return;
-      }
-
-      const fileUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, trailerUrl: fileUrl });
+    const allowedTypes = ["video/mp4", "video/avi", "video/mkv"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Wrong format! Only MP4, AVI, MKV permitted.");
+      return;
     }
+
+    const maxSize = 100 * 1024 * 1024; // 100MB
+    if (file.size > maxSize) {
+      alert("File is bigger than 100MB!");
+      return;
+    }
+
+    setFormData({ ...formData, trailerUrl: URL.createObjectURL(file) });
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,17 +94,18 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const now = new Date().toISOString();
-  
+
     const isoReleaseDate = formData.releaseDate
       ? new Date(formData.releaseDate).toISOString()
       : undefined;
-  
+
     const dataToSave = {
       ...formData,
       releaseDate: isoReleaseDate,
       updatedAt: now,
       createdAt: isEditMode ? formData.createdAt : now,
     };
+
     onSave(dataToSave);
   };
 
@@ -143,7 +117,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
         </div>
-        
+
         <div>
           <label htmlFor="contentTypeId">Content Type</label>
           <select
@@ -153,98 +127,124 @@ const ContentEdit: React.FC<ContentEditProps> = ({
             onChange={(e) => setFormData({ ...formData, contentTypeId: Number(e.target.value) })}
             required
           >
-          <option value="">-- Select Type --</option>
+            <option value="">-- Select Type --</option>
             {contentTypes.map((type) => (
-              <option key={type.id} value={type.id}>
-                {type.name}
-              </option>
+              <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </select>
         </div>
-        
+
         <div>
           <label htmlFor="description">Description</label>
           <textarea id="description" name="description" value={formData.description || ''} onChange={handleChange} required />
         </div>
-        
+
         <div>
           <label htmlFor="releaseDate">Release Date</label>
           <input type="date" id="releaseDate" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} required />
         </div>
-        
+
         <div>
           <label htmlFor="durationMin">Duration (min)</label>
           <input type="number" id="durationMin" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} required min="0" />
         </div>
-        
+
         <div>
           <label htmlFor="ageRating">Age Rating</label>
           <input type="text" id="ageRating" name="ageRating" value={formData.ageRating || ''} onChange={handleChange} />
         </div>
-        
+
         <div>
           <label>
-            <input 
-              type="checkbox" 
-              name="isActive" 
-              checked={formData.isActive || false} 
-              onChange={handleCheckboxChange} 
-            />
+            <input type="checkbox" name="isActive" checked={formData.isActive || false} onChange={handleCheckboxChange} />
             Is Active
           </label>
         </div>
-        
+
         <div>
-          <label htmlFor="genres">Genres</label>
-          <select id="genres" multiple value={formData.genres?.map((g) => g.id.toString()) || []} onChange={handleGenreChange}>
-            {genres.map((genre) => (
-              <option key={genre.id} value={genre.id}>
-                {genre.name}
-              </option>
-            ))}
-          </select>
+          <label>Genres</label>
+          <div className="__select">
+            <div className="__select__content">
+              {genres.map((genre) => (
+                <React.Fragment key={genre.id}>
+                  <input
+                    id={`genre-${genre.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.genres?.some((g) => g.id === genre.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.genres || []), genre]
+                        : formData.genres?.filter((g) => g.id !== genre.id) || [];
+                      setFormData({ ...formData, genres: updated });
+                    }}
+                  />
+                  <label htmlFor={`genre-${genre.id}`} className="__select__label">
+                    {genre.name}
+                  </label>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div>
-          <label htmlFor="actors">Actors</label>
-          <select
-            id="actors"
-            multiple
-            value={formData.actors?.map((a) => a.id.toString()) || []}
-            onChange={handleActorsChange}
-          >
-          {actors.map((actor) => (
-            <option key={actor.id} value={actor.id}>
-              {actor.name} {actor.surname}
-            </option>
-          ))}
-          </select>
+          <label>Actors</label>
+          <div className="__select">
+            <div className="__select__content">
+              {actors.map((actor) => (
+                <React.Fragment key={actor.id}>
+                  <input
+                    id={`actor-${actor.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.actors?.some((a) => a.id === actor.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.actors || []), actor]
+                        : formData.actors?.filter((a) => a.id !== actor.id) || [];
+                      setFormData({ ...formData, actors: updated });
+                    }}
+                  />
+                  <label htmlFor={`actor-${actor.id}`} className="__select__label">
+                    {actor.name} {actor.surname}
+                  </label>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div>
-          <label htmlFor="warnings">Warnings</label>
-          <select
-            id="warnings"
-            multiple
-            value={formData.warnings?.map((a) => a.id.toString()) || []}
-            onChange={handleWarningsChange}
-          >
-          {warnings.map((warning) => (
-            <option key={warning.id} value={warning.id}>
-              {warning.name}
-            </option>
-          ))}
-          </select>
+          <label>Warnings</label>
+          <div className="__select">
+            <div className="__select__content">
+              {warnings.map((warning) => (
+                <React.Fragment key={warning.id}>
+                  <input
+                    id={`warning-${warning.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.warnings?.some((w) => w.id === warning.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.warnings || []), warning]
+                        : formData.warnings?.filter((w) => w.id !== warning.id) || [];
+                      setFormData({ ...formData, warnings: updated });
+                    }}
+                  />
+                  <label htmlFor={`warning-${warning.id}`} className="__select__label">
+                    {warning.name}
+                  </label>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
         </div>
-        
+
         <div>
           <label htmlFor="poster">Poster Image</label>
-          <input 
-            type="file" 
-            id="poster" 
-            accept="image/*" 
-            onChange={handlePosterUpload} 
-          />
+          <input type="file" id="poster" accept="image/*" onChange={handlePosterUpload} />
           {formData.posterUrl && (
             <div>
               <p>Uploaded poster:</p>
@@ -252,37 +252,27 @@ const ContentEdit: React.FC<ContentEditProps> = ({
             </div>
           )}
         </div>
-        
+
         <div>
           <label htmlFor="trailer">Trailer Video</label>
-          <input 
-            type="file" 
-            id="trailer" 
-            accept="video/*" 
-            onChange={handleTrailerUpload} 
-          />
+          <input type="file" id="trailer" accept="video/*" onChange={handleTrailerUpload} />
           {formData.trailerUrl && (
             <div>
               <p>Uploaded trailer: <a href={formData.trailerUrl} target="_blank" rel="noopener noreferrer">View trailer</a></p>
             </div>
           )}
         </div>
-        
+
         <div>
           <label htmlFor="video">Main Video</label>
-          <input 
-            type="file" 
-            id="video" 
-            accept="video/*" 
-            onChange={handleVideoUpload} 
-          />
+          <input type="file" id="video" accept="video/*" onChange={handleVideoUpload} />
           {formData.videoUrl && (
             <div>
               <p>Uploaded video: <a href={formData.videoUrl} target="_blank" rel="noopener noreferrer">View video</a></p>
             </div>
           )}
         </div>
-        
+
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add Content'}</button>
         <button type="button" onClick={onCancel}>Cancel</button>
       </form>

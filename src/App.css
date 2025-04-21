@@ -89,6 +89,7 @@ nav ul {
   padding: 0;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 nav ul li a {
@@ -186,4 +187,91 @@ nav ul li a:hover {
 .content-form input[type="checkbox"]{
   width: auto;
   margin-right: 5px;
+}
+
+.burger {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #24c0c9;
+  padding: 10px;
+}
+
+@media only screen and (max-width: 900px) {
+  .burger {
+    display: block;
+  }
+
+  nav ul {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  nav ul li {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  nav ul.open {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  td button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.__select {
+  display: flex;
+  width: 100%;
+  max-height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 5px;
+  border: solid 1px #c7ccd1;
+}
+
+.__select__content {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.__select__input {
+  display: none;
+}
+
+.__select__input:checked + label {
+  background-color: #24c0c9;
+  color: white;
+}
+
+.__select__input:disabled + label {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.__select__label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 16px;
+  cursor: pointer;
+  border-top: 1px solid #C7CCD160;
+}
+
+.__select__label:hover {
+  background-color: rgb(0, 238, 255) !important;
+  color: #ffffff;
 }

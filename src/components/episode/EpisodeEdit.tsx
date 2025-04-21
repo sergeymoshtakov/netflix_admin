@@ -139,11 +139,21 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
         <div>
           <label>Trailer</label>
           <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'trailerUrl', 100, 'video')} />
+          {formData.trailerUrl && (
+            <div>
+              <p>Uploaded trailer: <a href={formData.trailerUrl} target="_blank" rel="noopener noreferrer">View trailer</a></p>
+            </div>
+          )}
         </div>
 
         <div>
           <label>Video</label>
           <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'videoUrl', 500, 'video')} />
+          {formData.videoUrl && (
+            <div>
+              <p>Uploaded video: <a href={formData.videoUrl} target="_blank" rel="noopener noreferrer">View video</a></p>
+            </div>
+          )}
         </div>
 
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add Episode'}</button>
