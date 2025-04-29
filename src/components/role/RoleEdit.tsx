@@ -10,14 +10,24 @@ interface RoleEditProps {
 
 const RoleEdit: React.FC<RoleEditProps> = ({ role, isEditMode, onSave, onCancel }) => {
   const [formData, setFormData] = useState<Role>(role);
+  const [error, setError] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (value.trim()) {
+      setError('');
+    }
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.name.trim()) {
+      setError('Name is required');
+      return;
+    } else if (formData.name.length > 50){
+      setError('Name must not be longer than 50 characters.');
+    }
     onSave(formData);
   };
 
@@ -35,6 +45,7 @@ const RoleEdit: React.FC<RoleEditProps> = ({ role, isEditMode, onSave, onCancel 
             onChange={handleChange}
             required
           />
+          {error && <div style={{ color: 'red', marginTop: '4px' }}>{error}</div>}
         </div>
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add Role'}</button>
         <button type="button" onClick={onCancel}>Cancel</button>

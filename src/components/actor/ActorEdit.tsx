@@ -10,16 +10,44 @@ interface ActorEditProps {
 
 const ActorEdit: React.FC<ActorEditProps> = ({ actor, isEditMode, onSave, onCancel }) => {
   const [formData, setFormData] = useState<Actor>(actor);
+  const [errors, setErrors] = useState<{ name?: string; surname?: string }>({});
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === 'name' && value.trim()) {
+      setErrors((prev) => ({ ...prev, name: undefined }));
+    }
+    if (name === 'surname' && value.trim()) {
+      setErrors((prev) => ({ ...prev, surname: undefined }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+  
+    const newErrors: { name?: string; surname?: string } = {};
+  
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.length > 50) {
+      newErrors.name = 'Name must be 50 characters or fewer';
+    }
+  
+    if (!formData.surname.trim()) {
+      newErrors.surname = 'Surname is required';
+    } else if (formData.surname.length > 50) {
+      newErrors.surname = 'Surname must be 50 characters or fewer';
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+  
     onSave(formData);
-  };
+  };    
 
   return (
     <div>
@@ -35,6 +63,7 @@ const ActorEdit: React.FC<ActorEditProps> = ({ actor, isEditMode, onSave, onCanc
             onChange={handleChange}
             required
           />
+          {errors.name && <div style={{ color: 'red' }}>{errors.name}</div>}
         </div>
 
         <div>
@@ -47,6 +76,7 @@ const ActorEdit: React.FC<ActorEditProps> = ({ actor, isEditMode, onSave, onCanc
             onChange={handleChange}
             required
           />
+          {errors.surname && <div style={{ color: 'red' }}>{errors.surname}</div>}
         </div>
 
         <div>
