@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import UserEdit from './UserEdit';
-import RoleEdit from '../role/RoleEdit';
 import { AppUser, Role } from '../../models/AppUser';
 
 interface UserListProps {
@@ -27,7 +26,6 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     isBanned: false,
   });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
-  const [isRoleEditorVisible, setIsRoleEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -57,12 +55,6 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     setIsEditorVisible(true);
   };
 
-  const startEditingRoles = (user: AppUser, index: number) => {
-    setCurrentUser({ ...user });
-    setEditingIndex(index);
-    setIsRoleEditorVisible(true);
-  };
-
   const saveUser = (user: AppUser) => {
     if (isEditMode && editingIndex !== null) {
       onEditUser(user, editingIndex);
@@ -72,16 +64,8 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     setIsEditorVisible(false);
   };
 
-  const saveRoles = (user: AppUser) => {
-    if (editingIndex !== null) {
-      onEditUser(user, editingIndex);
-    }
-    setIsRoleEditorVisible(false);
-  };
-
   const cancelEdit = () => {
     setIsEditorVisible(false);
-    setIsRoleEditorVisible(false);
   };
 
   const toggleBanUser = (index: number) => {
@@ -118,7 +102,6 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
               </td>
               <td>
                 <button onClick={() => startEditing(user, index)}>Edit</button>
-                <button onClick={() => startEditingRoles(user, index)}>Edit Roles</button>
                 <button onClick={() => toggleBanUser(index)}>
                   {user.isBanned ? "Unban" : "Ban"}
                 </button>
@@ -134,14 +117,6 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
           roles={roles}
           isEditMode={isEditMode}
           onSave={saveUser}
-          onCancel={cancelEdit}
-        />
-      )}
-      {isRoleEditorVisible && (
-        <RoleEdit
-          user={currentUser}
-          roles={roles}
-          onSave={saveRoles}
           onCancel={cancelEdit}
         />
       )}

@@ -128,18 +128,24 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
         </div>
         <div>
           <label>Roles</label>
-          {roles.map((role) => (
-            <div key={role.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selectedRoles.some((r) => r.id === role.id)}
-                  onChange={() => handleRoleChange(role)}
-                />
-                {role.name}
-              </label>
+          <div className="__select">
+            <div className="__select__content">
+              {roles.map((role) => (
+                <React.Fragment key={role.id}>
+                  <input
+                    id={`role-${role.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={selectedRoles.some((r) => r.id === role.id)}
+                    onChange={() => handleRoleChange(role)}
+                  />
+                  <label htmlFor={`role-${role.id}`} className="__select__label">
+                    {role.name}
+                  </label>
+                </React.Fragment>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
         <button type="submit">{isEditMode ? 'Save Changes' : 'Add User'}</button>
         <button type="button" onClick={onCancel}>
