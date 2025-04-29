@@ -11,7 +11,7 @@ const NavBar: React.FC<NavBarProps> = ({ onLogout, currentUser }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div>
+    <div className='menu-line'>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         {currentUser && (
           <p>

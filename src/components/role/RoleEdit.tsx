@@ -1,49 +1,43 @@
 import React, { useState } from 'react';
-import { AppUser, Role } from '../../models/AppUser';
+import { Role } from '../../models/AppUser';
 
 interface RoleEditProps {
-  user: AppUser;
-  roles: Role[];
-  onSave: (user: AppUser) => void;
+  role: Role;
+  isEditMode: boolean;
+  onSave: (role: Role) => void;
   onCancel: () => void;
 }
 
-const RoleEdit: React.FC<RoleEditProps> = ({ user, roles, onSave, onCancel }) => {
-  const [selectedRoles, setSelectedRoles] = useState<Role[]>(user.roles || []);
+const RoleEdit: React.FC<RoleEditProps> = ({ role, isEditMode, onSave, onCancel }) => {
+  const [formData, setFormData] = useState<Role>(role);
 
-  const handleRoleChange = (role: Role) => {
-    if (selectedRoles.some((r) => r.id === role.id)) {
-      setSelectedRoles(selectedRoles.filter((r) => r.id !== role.id));
-    } else {
-      setSelectedRoles([...selectedRoles, role]);
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...user, roles: selectedRoles });
+    onSave(formData);
   };
 
   return (
     <div>
-      <h3>Edit Roles for {user.username}</h3>
-      <form onSubmit={handleSubmit}>
-        {roles.map((role) => (
-          <div key={role.id}>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedRoles.some((r) => r.id === role.id)}
-                onChange={() => handleRoleChange(role)}
-              />
-              {role.name}
-            </label>
-          </div>
-        ))}
-        <button type="submit">Save Roles</button>
-        <button type="button" onClick={onCancel}>
-          Cancel
-        </button>
+      <h3>{isEditMode ? 'Edit Role' : 'Add Role'}</h3>
+      <form onSubmit={handleSubmit} className='roles-form'>
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <button type="submit">{isEditMode ? 'Save Changes' : 'Add Role'}</button>
+        <button type="button" onClick={onCancel}>Cancel</button>
       </form>
     </div>
   );
