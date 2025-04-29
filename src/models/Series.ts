@@ -51,18 +51,6 @@ export interface Actor {
   biography?: string;
 }
 
-export interface ContentGenre {
-  id: number;
-  contentId: number;
-  genreId: number;
-}
-
-export interface ContentActor {
-  id: number;
-  contentId: number;
-  actorId: number;
-}
-
 export interface WishList {
   id: number;
   userId: number;
@@ -73,10 +61,4 @@ export interface WishList {
 export interface Warning {
   id: number;
   name: string;
-}
-
-export interface ContentWarning {
-  id: number;
-  contentId: number;
-  warningId: number;
 }
