@@ -34,6 +34,25 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
     onSave({ ...formData, roles: selectedRoles });
   };
 
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    if (!file.type.startsWith('image/')) {
+      alert('Only image files are allowed.');
+      return;
+    }
+  
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+    if (file.size > maxSize) {
+      alert('Image exceeds 5MB size limit.');
+      return;
+    }
+  
+    const url = URL.createObjectURL(file);
+    setFormData({ ...formData, avatar: url });
+  };  
+
   return (
     <div>
       <form className="user-form" onSubmit={handleSubmit}>
@@ -106,14 +125,20 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
           />
         </div>
         <div>
-          <label htmlFor="avatar">Avatar URL</label>
+          <label>Avatar</label>
           <input
-            type="text"
-            id="avatar"
-            name="avatar"
-            value={formData.avatar}
-            onChange={handleChange}
+            type="file"
+            id="avatar-upload"
+            accept="image/*"
+            onChange={handleAvatarUpload}
+            style={{ display: 'none' }}
           />
+          <label htmlFor="avatar-upload" className="upload-button">Upload Avatar</label>
+          {formData.avatar && (
+            <div>
+              <img src={formData.avatar} alt="Avatar preview" style={{ maxWidth: '100px', marginTop: '10px' }} />
+            </div>
+          )}
         </div>
         <div>
           <label>
