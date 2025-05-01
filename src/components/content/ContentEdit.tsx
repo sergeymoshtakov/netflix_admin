@@ -168,17 +168,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {genres.map((genre) => (
                 <React.Fragment key={genre.id}>
                   <input
-                    id={`genre-${genre.id}`}
-                    className="__select__input"
-                    type="checkbox"
-                    checked={formData.genres?.some((g) => g.id === genre.id) || false}
-                    onChange={(e) => {
-                      const updated = e.target.checked
-                        ? [...(formData.genres || []), genre]
-                        : formData.genres?.filter((g) => g.id !== genre.id) || [];
-                      setFormData({ ...formData, genres: updated });
-                    }}
-                  />
+  id={`genre-${genre.id}`}
+  className="__select__input"
+  type="checkbox"
+  checked={formData.genreIds?.includes(genre.id) || false}
+  onChange={(e) => {
+    const updated = e.target.checked
+      ? [...(formData.genreIds || []), genre.id]
+      : formData.genreIds?.filter((id) => id !== genre.id) || [];
+    setFormData({ ...formData, genreIds: updated });
+  }}
+/>
                   <label htmlFor={`genre-${genre.id}`} className="__select__label">
                     {genre.name}
                   </label>
@@ -195,17 +195,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {actors.map((actor) => (
                 <React.Fragment key={actor.id}>
                   <input
-                    id={`actor-${actor.id}`}
-                    className="__select__input"
-                    type="checkbox"
-                    checked={formData.actors?.some((a) => a.id === actor.id) || false}
-                    onChange={(e) => {
-                      const updated = e.target.checked
-                        ? [...(formData.actors || []), actor]
-                        : formData.actors?.filter((a) => a.id !== actor.id) || [];
-                      setFormData({ ...formData, actors: updated });
-                    }}
-                  />
+  id={`actor-${actor.id}`}
+  className="__select__input"
+  type="checkbox"
+  checked={formData.actorIds?.includes(actor.id) || false}
+  onChange={(e) => {
+    const updated = e.target.checked
+      ? [...(formData.actorIds || []), actor.id]
+      : formData.actorIds?.filter((id) => id !== actor.id) || [];
+    setFormData({ ...formData, actorIds: updated });
+  }}
+/>
                   <label htmlFor={`actor-${actor.id}`} className="__select__label">
                     {actor.name} {actor.surname}
                   </label>
@@ -222,17 +222,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {warnings.map((warning) => (
                 <React.Fragment key={warning.id}>
                   <input
-                    id={`warning-${warning.id}`}
-                    className="__select__input"
-                    type="checkbox"
-                    checked={formData.warnings?.some((w) => w.id === warning.id) || false}
-                    onChange={(e) => {
-                      const updated = e.target.checked
-                        ? [...(formData.warnings || []), warning]
-                        : formData.warnings?.filter((w) => w.id !== warning.id) || [];
-                      setFormData({ ...formData, warnings: updated });
-                    }}
-                  />
+  id={`warning-${warning.id}`}
+  className="__select__input"
+  type="checkbox"
+  checked={formData.warningIds?.includes(warning.id) || false}
+  onChange={(e) => {
+    const updated = e.target.checked
+      ? [...(formData.warningIds || []), warning.id]
+      : formData.warningIds?.filter((id) => id !== warning.id) || [];
+    setFormData({ ...formData, warningIds: updated });
+  }}
+/>
                   <label htmlFor={`warning-${warning.id}`} className="__select__label">
                     {warning.name}
                   </label>

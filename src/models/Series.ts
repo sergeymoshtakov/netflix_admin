@@ -19,10 +19,9 @@ export interface Content {
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
-  genres?: Genre[];
-  actors?: Actor[];
-  episodes?: Episode[];
-  warnings?: Warning[];
+  genreIds?: number[];
+  actorIds?: number[];
+  warningIds?: number[];
 }
 
 export interface Episode {

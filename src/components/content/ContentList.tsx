@@ -31,9 +31,9 @@ const ContentList: React.FC<ContentListProps> = ({
     releaseDate: '',
     durationMin: 0,
     ageRating: '',
-    genres: [],
-    episodes: [],
-    warnings: [],
+    genreIds: [],
+    actorIds: [],
+    warningIds: [],
   });
 
   const [isEditorVisible, setIsEditorVisible] = useState(false);
@@ -49,8 +49,9 @@ const ContentList: React.FC<ContentListProps> = ({
       releaseDate: '',
       durationMin: 0,
       ageRating: '',
-      genres: [],
-      episodes: [],
+      genreIds: [],
+      actorIds: [],
+      warningIds: [],
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
