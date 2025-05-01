@@ -244,31 +244,76 @@ const ContentEdit: React.FC<ContentEditProps> = ({
 
         <div>
           <label htmlFor="poster">Poster Image</label>
-          <input type="file" id="poster" accept="image/*" onChange={handlePosterUpload} />
+          <input
+            type="file"
+            id="poster"
+            accept="image/*"
+            onChange={handlePosterUpload}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="poster" className="upload-button">Upload Poster</label>
+
           {formData.posterUrl && (
             <div>
-              <p>Uploaded poster:</p>
-              <img src={formData.posterUrl} alt="Poster preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+              <img
+                src={formData.posterUrl}
+                alt="Poster preview"
+                style={{
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  maxWidth: '200px',
+                  maxHeight: '200px',
+                  marginTop: '10px'
+                }}
+              />
             </div>
           )}
         </div>
 
         <div>
           <label htmlFor="trailer">Trailer Video</label>
-          <input type="file" id="trailer" accept="video/*" onChange={handleTrailerUpload} />
+          <input 
+            type="file" 
+            id="trailer" 
+            accept="video/*" 
+            onChange={handleTrailerUpload}
+            style={{ display: 'none' }} 
+          />
+          <label htmlFor="trailer" className="upload-button">Upload Video</label>
           {formData.trailerUrl && (
             <div>
-              <p>Uploaded trailer: <a href={formData.trailerUrl} target="_blank" rel="noopener noreferrer">View trailer</a></p>
+              <a
+                href={formData.trailerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="upload-button"
+              >
+                View Trailer
+              </a>
             </div>
           )}
         </div>
 
         <div>
           <label htmlFor="video">Main Video</label>
-          <input type="file" id="video" accept="video/*" onChange={handleVideoUpload} />
+          <input 
+            type="file" 
+            id="video" 
+            accept="video/*" 
+            onChange={handleVideoUpload}
+            style={{ display: 'none' }} 
+          />
+          <label htmlFor="video" className="upload-button">Upload Video</label>
           {formData.videoUrl && (
             <div>
-              <p>Uploaded video: <a href={formData.videoUrl} target="_blank" rel="noopener noreferrer">View video</a></p>
+              <a 
+                href={formData.videoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="upload-button"
+                >
+                  View video
+              </a>
             </div>
           )}
         </div>

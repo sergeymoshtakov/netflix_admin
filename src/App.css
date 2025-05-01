@@ -279,3 +279,20 @@ nav ul li a:hover {
   background-color: rgb(0, 238, 255) !important;
   color: #ffffff;
 }
+
+.upload-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #24c0c9;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.3s;
+  font-weight: 500;
+  width: max-content;
+}
+
+.upload-button:hover {
+  background-color: rgb(0, 238, 255);
+}

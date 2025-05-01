@@ -138,20 +138,48 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
 
         <div>
           <label>Trailer</label>
-          <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'trailerUrl', 100, 'video')} />
+          <input 
+            type="file"
+            id='trailer'
+            accept="video/*" 
+            onChange={(e) => handleFileUpload(e, 'trailerUrl', 100, 'video')} 
+            style={{ display: 'none' }} 
+          />
+          <label htmlFor="trailer" className="upload-button">Upload Trailer</label>
           {formData.trailerUrl && (
             <div>
-              <p>Uploaded trailer: <a href={formData.trailerUrl} target="_blank" rel="noopener noreferrer">View trailer</a></p>
+              <a 
+                href={formData.trailerUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="upload-button"
+                >
+                  View trailer
+              </a>
             </div>
           )}
         </div>
 
         <div>
           <label>Video</label>
-          <input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'videoUrl', 500, 'video')} />
+          <input 
+            type="file" 
+            id='video'
+            accept="video/*" 
+            onChange={(e) => handleFileUpload(e, 'videoUrl', 500, 'video')}
+            style={{ display: 'none' }}
+          />
+          <label htmlFor="video" className="upload-button">Upload Video</label>
           {formData.videoUrl && (
             <div>
-              <p>Uploaded video: <a href={formData.videoUrl} target="_blank" rel="noopener noreferrer">View video</a></p>
+              <a 
+                href={formData.videoUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="upload-button"
+                >
+                  View video
+              </a>
             </div>
           )}
         </div>
