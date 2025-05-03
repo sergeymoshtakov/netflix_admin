@@ -12,6 +12,7 @@ import WarningList from './components/warning/WarningList';
 import NavBar from './components/NavBar';
 import { AppUser, Role } from './models/AppUser';
 import { Content, ContentType, Genre, Actor, Episode, Warning } from './models/Series';
+import Footer from './components/Footer';
 import './App.css';
 
 const App: React.FC = () => {
@@ -195,8 +196,9 @@ const App: React.FC = () => {
         {!currentUser ? (
           <Login users={users} onLogin={handleLogin} />
         ) : (
-          <div>
+          <div className='body'>
             <NavBar onLogout={handleLogout} currentUser={currentUser} />
+            <main>
             <Routes>
               <Route
                 path="/"
@@ -294,6 +296,8 @@ const App: React.FC = () => {
                 }
               />
             </Routes>
+            </main>
+            <Footer/>
           </div>
         )}
       </div>

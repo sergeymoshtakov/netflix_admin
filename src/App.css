@@ -296,3 +296,61 @@ nav ul li a:hover {
 .upload-button:hover {
   background-color: rgb(0, 238, 255);
 }
+
+.footer {
+  background-color: #000;
+  color: #777;
+  padding: 40px;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-phone {
+  margin-bottom: 20px;
+}
+
+.footer-grid {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 40px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.footer-column span {
+  text-decoration: underline;
+  cursor: default;
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    justify-content: center;
+  }
+
+  .footer-column {
+    width: calc(50% - 10px);
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-column {
+    width: 100%;
+  }
+}
+
+.body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main{
+  flex: 1;
+}
