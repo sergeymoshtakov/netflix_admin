@@ -19,12 +19,14 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
   contentTypes,
 }) => {
   const [formData, setFormData] = useState<Episode>(episode);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: name === 'durationMin' ? Number(value) : value });
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleFileUpload = (
@@ -51,8 +53,41 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
     setFormData({ ...formData, [field]: url });
   };
 
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Name is required.';
+    }
+
+    if (!formData.contentId) {
+      newErrors.contentId = 'TV Show must be selected.';
+    }
+
+    if (!formData.seasonNumber || formData.seasonNumber < 1) {
+      newErrors.seasonNumber = 'Season must be a positive number.';
+    }
+
+    if (!formData.episodeNumber || formData.episodeNumber < 1) {
+      newErrors.episodeNumber = 'Episode must be a positive number.';
+    }
+
+    if (formData.durationMin != null && formData.durationMin < 1) {
+      newErrors.durationMin = 'Duration must be a positive number.';
+    }
+
+    if (formData.description && formData.description.length > 1000) {
+      newErrors.description = 'Description must not exceed 1000 characters.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+
     const now = new Date().toISOString();
 
     const isoReleaseDate = formData.releaseDate
@@ -77,12 +112,13 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
       <form className="episode-form" onSubmit={handleSubmit}>
         <div>
           <label>Name</label>
-          <input name="name" value={formData.name} onChange={handleChange} required />
+          <input name="name" value={formData.name} onChange={handleChange} />
+          {errors.name && <div className="error">{errors.name}</div>}
         </div>
 
         <div>
           <label>TV Show</label>
-          <select name="contentId" value={formData.contentId} onChange={handleChange} required>
+          <select name="contentId" value={formData.contentId} onChange={handleChange}>
             <option value="">Select TV Show</option>
             {tvShows.map((show) => (
               <option key={show.id} value={show.id}>
@@ -90,6 +126,7 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
               </option>
             ))}
           </select>
+          {errors.contentId && <div className="error">{errors.contentId}</div>}
         </div>
 
         <div>
@@ -100,8 +137,8 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
             value={formData.seasonNumber}
             onChange={handleChange}
             min={1}
-            required
           />
+          {errors.seasonNumber && <div className="error">{errors.seasonNumber}</div>}
         </div>
 
         <div>
@@ -112,8 +149,8 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
             value={formData.episodeNumber}
             onChange={handleChange}
             min={1}
-            required
           />
+          {errors.episodeNumber && <div className="error">{errors.episodeNumber}</div>}
         </div>
 
         <div>
@@ -123,17 +160,25 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
             type="number"
             value={formData.durationMin || ''}
             onChange={handleChange}
+            min={1}
           />
+          {errors.durationMin && <div className="error">{errors.durationMin}</div>}
         </div>
 
         <div>
           <label>Description</label>
           <textarea name="description" value={formData.description || ''} onChange={handleChange} />
+          {errors.description && <div className="error">{errors.description}</div>}
         </div>
 
         <div>
           <label>Release Date</label>
-          <input type="date" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} />
+          <input
+            type="date"
+            name="releaseDate"
+            value={formData.releaseDate?.slice(0, 10) || ''}
+            onChange={handleChange}
+          />
         </div>
 
         <div>
