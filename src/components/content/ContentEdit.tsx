@@ -191,7 +191,7 @@ const ContentEdit: React.FC<ContentEditProps> = ({
 
         <div>
           <label htmlFor="durationMin">Duration (min)</label>
-          <input type="number" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} min="0" required />
+          <input type="number" name="durationMin" value={formData.durationMin} onChange={handleChange} min="0" required />
           {errors.durationMin && <div className="error">{errors.durationMin}</div>}
         </div>
 
