@@ -23,10 +23,12 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   warnings,
 }) => {
   const [formData, setFormData] = useState<Content>(content);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleVideoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,10 +93,47 @@ const ContentEdit: React.FC<ContentEditProps> = ({
     setFormData({ ...formData, [name]: checked });
   };
 
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Name is required.';
+    } else if (formData.name.length > 100) {
+      newErrors.name = 'Name must not exceed 100 characters.';
+    }
+
+    if (!formData.description?.trim()) {
+      newErrors.description = 'Description is required.';
+    } else if (formData.description.length > 1000) {
+      newErrors.description = 'Description must not exceed 1000 characters.';
+    }
+
+    if (!formData.releaseDate) {
+      newErrors.releaseDate = 'Release date is required.';
+    }
+
+    if (formData.durationMin == null || formData.durationMin < 1) {
+      newErrors.durationMin = 'Duration must be a positive number.';
+    }
+
+    if (!formData.contentTypeId) {
+      newErrors.contentTypeId = 'Content type must be selected.';
+    }
+
+    if (formData.ageRating && formData.ageRating.length > 10) {
+      newErrors.ageRating = 'Age rating must not exceed 10 characters.';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const now = new Date().toISOString();
 
+    if (!validate()) return;
+
+    const now = new Date().toISOString();
     const isoReleaseDate = formData.releaseDate
       ? new Date(formData.releaseDate).toISOString()
       : undefined;
@@ -116,15 +155,18 @@ const ContentEdit: React.FC<ContentEditProps> = ({
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
+          {errors.name && <div className="error">{errors.name}</div>}
         </div>
 
         <div>
           <label htmlFor="contentTypeId">Content Type</label>
           <select
-            id="contentTypeId"
             name="contentTypeId"
             value={formData.contentTypeId}
-            onChange={(e) => setFormData({ ...formData, contentTypeId: Number(e.target.value) })}
+            onChange={(e) => {
+              setFormData({ ...formData, contentTypeId: Number(e.target.value) });
+              setErrors((prev) => ({ ...prev, contentTypeId: '' }));
+            }}
             required
           >
             <option value="">-- Select Type --</option>
@@ -132,26 +174,31 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               <option key={type.id} value={type.id}>{type.name}</option>
             ))}
           </select>
+          {errors.contentTypeId && <div className="error">{errors.contentTypeId}</div>}
         </div>
 
         <div>
           <label htmlFor="description">Description</label>
-          <textarea id="description" name="description" value={formData.description || ''} onChange={handleChange} required />
+          <textarea name="description" value={formData.description || ''} onChange={handleChange} required />
+          {errors.description && <div className="error">{errors.description}</div>}
         </div>
 
         <div>
           <label htmlFor="releaseDate">Release Date</label>
-          <input type="date" id="releaseDate" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} required />
+          <input type="date" name="releaseDate" value={formData.releaseDate?.slice(0, 10) || ''} onChange={handleChange} required />
+          {errors.releaseDate && <div className="error">{errors.releaseDate}</div>}
         </div>
 
         <div>
           <label htmlFor="durationMin">Duration (min)</label>
-          <input type="number" id="durationMin" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} required min="0" />
+          <input type="number" name="durationMin" value={formData.durationMin || 0} onChange={handleChange} min="0" required />
+          {errors.durationMin && <div className="error">{errors.durationMin}</div>}
         </div>
 
         <div>
           <label htmlFor="ageRating">Age Rating</label>
-          <input type="text" id="ageRating" name="ageRating" value={formData.ageRating || ''} onChange={handleChange} />
+          <input type="text" name="ageRating" value={formData.ageRating || ''} onChange={handleChange} />
+          {errors.ageRating && <div className="error">{errors.ageRating}</div>}
         </div>
 
         <div>
@@ -168,17 +215,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {genres.map((genre) => (
                 <React.Fragment key={genre.id}>
                   <input
-  id={`genre-${genre.id}`}
-  className="__select__input"
-  type="checkbox"
-  checked={formData.genreIds?.includes(genre.id) || false}
-  onChange={(e) => {
-    const updated = e.target.checked
-      ? [...(formData.genreIds || []), genre.id]
-      : formData.genreIds?.filter((id) => id !== genre.id) || [];
-    setFormData({ ...formData, genreIds: updated });
-  }}
-/>
+                    id={`genre-${genre.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.genreIds?.includes(genre.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.genreIds || []), genre.id]
+                        : formData.genreIds?.filter((id) => id !== genre.id) || [];
+                      setFormData({ ...formData, genreIds: updated });
+                    }}
+                  />
                   <label htmlFor={`genre-${genre.id}`} className="__select__label">
                     {genre.name}
                   </label>
@@ -195,17 +242,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {actors.map((actor) => (
                 <React.Fragment key={actor.id}>
                   <input
-  id={`actor-${actor.id}`}
-  className="__select__input"
-  type="checkbox"
-  checked={formData.actorIds?.includes(actor.id) || false}
-  onChange={(e) => {
-    const updated = e.target.checked
-      ? [...(formData.actorIds || []), actor.id]
-      : formData.actorIds?.filter((id) => id !== actor.id) || [];
-    setFormData({ ...formData, actorIds: updated });
-  }}
-/>
+                    id={`actor-${actor.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.actorIds?.includes(actor.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.actorIds || []), actor.id]
+                        : formData.actorIds?.filter((id) => id !== actor.id) || [];
+                      setFormData({ ...formData, actorIds: updated });
+                    }}
+                  />
                   <label htmlFor={`actor-${actor.id}`} className="__select__label">
                     {actor.name} {actor.surname}
                   </label>
@@ -222,17 +269,17 @@ const ContentEdit: React.FC<ContentEditProps> = ({
               {warnings.map((warning) => (
                 <React.Fragment key={warning.id}>
                   <input
-  id={`warning-${warning.id}`}
-  className="__select__input"
-  type="checkbox"
-  checked={formData.warningIds?.includes(warning.id) || false}
-  onChange={(e) => {
-    const updated = e.target.checked
-      ? [...(formData.warningIds || []), warning.id]
-      : formData.warningIds?.filter((id) => id !== warning.id) || [];
-    setFormData({ ...formData, warningIds: updated });
-  }}
-/>
+                    id={`warning-${warning.id}`}
+                    className="__select__input"
+                    type="checkbox"
+                    checked={formData.warningIds?.includes(warning.id) || false}
+                    onChange={(e) => {
+                      const updated = e.target.checked
+                        ? [...(formData.warningIds || []), warning.id]
+                        : formData.warningIds?.filter((id) => id !== warning.id) || [];
+                      setFormData({ ...formData, warningIds: updated });
+                    }}
+                  />
                   <label htmlFor={`warning-${warning.id}`} className="__select__label">
                     {warning.name}
                   </label>
