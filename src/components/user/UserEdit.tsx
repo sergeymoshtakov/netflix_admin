@@ -12,6 +12,7 @@ interface UserEditProps {
 const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, onCancel }) => {
   const [formData, setFormData] = useState<AppUser>(user);
   const [selectedRoles, setSelectedRoles] = useState<Role[]>(user.roles || []);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -31,33 +32,46 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ ...formData, roles: selectedRoles });
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.username) newErrors.username = 'Username is required.';
+    if (!formData.email) newErrors.email = 'Email is required.';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format.';
+    if (!formData.enc_password) newErrors.enc_password = 'Password is required.';
+    else if (formData.enc_password.length < 6) newErrors.enc_password = 'Password must be at least 6 characters.';
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onSave({ ...formData, roles: selectedRoles });
+    }
   };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     if (!file.type.startsWith('image/')) {
-      alert('Only image files are allowed.');
+      setErrors((prev) => ({ ...prev, avatar: 'Only image files are allowed.' }));
       return;
     }
-  
+
     const maxSize = 5 * 1024 * 1024; // 5 MB
     if (file.size > maxSize) {
-      alert('Image exceeds 5MB size limit.');
+      setErrors((prev) => ({ ...prev, avatar: 'Image exceeds 5MB size limit.' }));
       return;
     }
-  
+
     const url = URL.createObjectURL(file);
     setFormData({ ...formData, avatar: url });
-  };  
+    setErrors((prev) => ({ ...prev, avatar: '' }));
+  };
 
   return (
     <div>
       <form className="user-form" onSubmit={handleSubmit}>
         <h3>{isEditMode ? 'Edit User' : 'Add User'}</h3>
-        <br/>
+        <br />
         <div>
           <label htmlFor="username">Username</label>
           <input
@@ -68,6 +82,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
             onChange={handleChange}
             required
           />
+          {errors.username && <div className="error">{errors.username}</div>}
         </div>
         <div>
           <label htmlFor="firstname">First Name</label>
@@ -101,6 +116,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
             onChange={handleChange}
             required
           />
+          {errors.email && <div className="error">{errors.email}</div>}
         </div>
         <div>
           <label htmlFor="phone_num">Phone</label>
@@ -123,6 +139,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
             onChange={handleChange}
             required
           />
+          {errors.enc_password && <div className="error">{errors.enc_password}</div>}
         </div>
         <div>
           <label>Avatar</label>
@@ -139,6 +156,7 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
               <img src={formData.avatar} alt="Avatar preview" style={{ maxWidth: '100px', marginTop: '10px' }} />
             </div>
           )}
+          {errors.avatar && <div className="error">{errors.avatar}</div>}
         </div>
         <div>
           <label>

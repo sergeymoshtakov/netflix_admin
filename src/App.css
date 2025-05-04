@@ -354,3 +354,9 @@ nav ul li a:hover {
 main{
   flex: 1;
 }
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+}

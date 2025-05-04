@@ -297,6 +297,7 @@ const App: React.FC = () => {
               />
             </Routes>
             </main>
+            <hr />
             <Footer/>
           </div>
         )}
