@@ -15,19 +15,15 @@ const GenreList: React.FC<GenreListProps> = ({
   onEditGenre,
   onDeleteGenre,
 }) => {
-  const [currentGenre, setCurrentGenre] = useState<Genre>({
-    id: 0,
-    name: '',
-  });
+  const [currentGenre, setCurrentGenre] = useState<Genre>({ id: 0, name: '' });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const startAdding = () => {
-    setCurrentGenre({
-      id: Date.now(),
-      name: '',
-    });
+    setCurrentGenre({ id: Date.now(), name: '' });
     setIsEditMode(false);
     setIsEditorVisible(true);
   };
@@ -52,18 +48,46 @@ const GenreList: React.FC<GenreListProps> = ({
     setIsEditorVisible(false);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+  };
+
+  const filteredGenres = genres
+    .filter((genre) => genre.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return sortOrder === 'asc' ? -1 : 1;
+      if (nameA > nameB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+  const sortIcon = sortOrder === 'asc' ? '▲' : '▼';
+
   return (
     <div className="genre-list">
-      <button onClick={startAdding}>Add New Genre</button>
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={startAdding}>Add New Genre</button>
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-field"
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
+            <th style={{ cursor: 'pointer' }} onClick={toggleSortOrder}>
+              Name {sortIcon}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {genres.map((genre, index) => (
+          {filteredGenres.map((genre, index) => (
             <tr key={genre.id}>
               <td>{genre.name}</td>
               <td>
@@ -74,6 +98,7 @@ const GenreList: React.FC<GenreListProps> = ({
           ))}
         </tbody>
       </table>
+
       {isEditorVisible && (
         <GenreEdit
           genre={currentGenre}

@@ -360,3 +360,12 @@ main{
   font-size: 12px;
   margin-top: 4px;
 }
+
+.search-field{
+  margin-left: 10px;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}

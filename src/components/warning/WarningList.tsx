@@ -15,19 +15,15 @@ const WarningList: React.FC<WarningListProps> = ({
   onEditWarning,
   onDeleteWarning,
 }) => {
-  const [currentWarning, setCurrentWarning] = useState<Warning>({
-    id: 0,
-    name: '',
-  });
+  const [currentWarning, setCurrentWarning] = useState<Warning>({ id: 0, name: '' });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const startAdding = () => {
-    setCurrentWarning({
-      id: Date.now(),
-      name: '',
-    });
+    setCurrentWarning({ id: Date.now(), name: '' });
     setIsEditMode(false);
     setIsEditorVisible(true);
   };
@@ -39,7 +35,7 @@ const WarningList: React.FC<WarningListProps> = ({
     setIsEditorVisible(true);
   };
 
-  const saveGenre = (warning: Warning) => {
+  const saveWarning = (warning: Warning) => {
     if (isEditMode && editingIndex !== null) {
       onEditWarning(warning, editingIndex);
     } else {
@@ -52,18 +48,46 @@ const WarningList: React.FC<WarningListProps> = ({
     setIsEditorVisible(false);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+  };
+
+  const filteredWarnings = warnings
+    .filter((w) => w.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return sortOrder === 'asc' ? -1 : 1;
+      if (nameA > nameB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+  const sortIcon = sortOrder === 'asc' ? '▲' : '▼';
+
   return (
-    <div className="genre-list">
-      <button onClick={startAdding}>Add New Warning</button>
+    <div className="warning-list">
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={startAdding}>Add New Warning</button>
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='search-field'
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
+            <th style={{ cursor: 'pointer' }} onClick={toggleSortOrder}>
+              Name {sortIcon}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {warnings.map((warning, index) => (
+          {filteredWarnings.map((warning, index) => (
             <tr key={warning.id}>
               <td>{warning.name}</td>
               <td>
@@ -74,11 +98,12 @@ const WarningList: React.FC<WarningListProps> = ({
           ))}
         </tbody>
       </table>
+
       {isEditorVisible && (
         <WarningEdit
           warning={currentWarning}
           isEditMode={isEditMode}
-          onSave={saveGenre}
+          onSave={saveWarning}
           onCancel={cancelEdit}
         />
       )}
