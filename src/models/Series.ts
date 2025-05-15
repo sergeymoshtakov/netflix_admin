@@ -41,6 +41,9 @@ export interface Episode {
 export interface Genre {
   id: number;
   name: string;
+  imageUrl: string;
+  description: string;
+  tags: string;
 }
 
 export interface Actor {

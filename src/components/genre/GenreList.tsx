@@ -15,7 +15,7 @@ const GenreList: React.FC<GenreListProps> = ({
   onEditGenre,
   onDeleteGenre,
 }) => {
-  const [currentGenre, setCurrentGenre] = useState<Genre>({ id: 0, name: '' });
+  const [currentGenre, setCurrentGenre] = useState<Genre>({ id: 0, name: '', imageUrl: '', description: '', tags: ''});
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -23,7 +23,7 @@ const GenreList: React.FC<GenreListProps> = ({
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const startAdding = () => {
-    setCurrentGenre({ id: Date.now(), name: '' });
+    setCurrentGenre({ id: Date.now(), name: '', imageUrl: '', description: '', tags: '' });
     setIsEditMode(false);
     setIsEditorVisible(true);
   };
@@ -83,6 +83,9 @@ const GenreList: React.FC<GenreListProps> = ({
             <th style={{ cursor: 'pointer' }} onClick={toggleSortOrder}>
               Name {sortIcon}
             </th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Tags</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -90,6 +93,17 @@ const GenreList: React.FC<GenreListProps> = ({
           {filteredGenres.map((genre, index) => (
             <tr key={genre.id}>
               <td>{genre.name}</td>
+              <td>
+                {genre.imageUrl ? (
+                  <a href={genre.imageUrl} target="_blank" rel="noopener noreferrer">
+                    View Image
+                  </a>
+                ) : (
+                  'No image'
+                )}
+              </td>
+              <td>{genre.description}</td>
+              <td>{genre.tags}</td>
               <td>
                 <button onClick={() => startEditing(genre, index)}>Edit</button>
                 <button onClick={() => onDeleteGenre(index)}>Delete</button>
