@@ -25,6 +25,18 @@ const ActorList: React.FC<ActorListProps> = ({
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'surname'>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  const handleSort = (field: 'name' | 'surname') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   const startAdding = () => {
     setCurrentActor({
@@ -57,20 +69,46 @@ const ActorList: React.FC<ActorListProps> = ({
     setIsEditorVisible(false);
   };
 
+  const filteredAndSortedActors = [...actors]
+    .filter((actor) =>
+      (actor.name + ' ' + actor.surname).toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aValue = a[sortField].toLowerCase();
+      const bValue = b[sortField].toLowerCase();
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
   return (
     <div className="actor-list">
-      <button onClick={startAdding}>Add New Actor</button>
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={startAdding}>Add New Actor</button>
+        <input
+          type="text"
+          placeholder="Search by name or surname..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='search-field'
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Surname</th>
+            <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
+              Name {sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('surname')} style={{ cursor: 'pointer' }}>
+              Surname {sortField === 'surname' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
             <th>Biography</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {actors.map((actor, index) => (
+          {filteredAndSortedActors.map((actor, index) => (
             <tr key={actor.id}>
               <td>{actor.name}</td>
               <td>{actor.surname}</td>
@@ -83,6 +121,7 @@ const ActorList: React.FC<ActorListProps> = ({
           ))}
         </tbody>
       </table>
+
       {isEditorVisible && (
         <ActorEdit
           actor={currentActor}
