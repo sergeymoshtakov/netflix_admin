@@ -21,9 +21,12 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
     description: '',
     tags: '',
   });
+
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const startAdding = () => {
     setCurrentContentType({
@@ -56,20 +59,46 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
     setIsEditorVisible(false);
   };
 
+  const toggleSortDirection = () => {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  };
+
+  const filteredAndSortedContentTypes = [...contentTypes]
+    .filter((ct) => ct.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+      if (nameA < nameB) return sortDirection === 'asc' ? -1 : 1;
+      if (nameA > nameB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
   return (
     <div className="content-type-list">
-      <button onClick={startAdding}>Add New Content Type</button>
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={startAdding}>Add New Content Type</button>
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-field"
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
+            <th onClick={toggleSortDirection} style={{ cursor: 'pointer' }}>
+              Name {sortDirection === 'asc' ? '▲' : '▼'}
+            </th>
             <th>Description</th>
             <th>Tags</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {contentTypes.map((ct, index) => (
+          {filteredAndSortedContentTypes.map((ct, index) => (
             <tr key={ct.id}>
               <td>{ct.name}</td>
               <td>{ct.description}</td>
@@ -82,6 +111,7 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
           ))}
         </tbody>
       </table>
+
       {isEditorVisible && (
         <ContentTypeEdit
           contentType={currentContentType}
