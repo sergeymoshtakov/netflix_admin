@@ -40,6 +40,10 @@ const ContentList: React.FC<ContentListProps> = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<'name' | 'contentType' | 'ageRating' | 'createdAt' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
   const startAdding = () => {
     setCurrentContent({
       id: Date.now(),
@@ -77,53 +81,114 @@ const ContentList: React.FC<ContentListProps> = ({
     setIsEditorVisible(false);
   };
 
+  const handleSort = (field: 'name' | 'contentType' | 'ageRating' | 'createdAt') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredAndSortedContent = [...contentList]
+    .filter((content) => {
+      const contentType = contentTypes.find(type => type.id === content.contentTypeId)?.name || '';
+      return (
+        content.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contentType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (content.ageRating || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (content.createdAt || '').toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      if (!sortField) return 0;
+
+      let aValue = '';
+      let bValue = '';
+
+      if (sortField === 'contentType') {
+        aValue = contentTypes.find(type => type.id === a.contentTypeId)?.name || 'zzz'; // default to bottom
+        bValue = contentTypes.find(type => type.id === b.contentTypeId)?.name || 'zzz';
+      } else if (sortField === 'createdAt') {
+        aValue = a.createdAt || '';
+        bValue = b.createdAt || '';
+      } else {
+        aValue = (a[sortField] || '').toString();
+        bValue = (b[sortField] || '').toString();
+      }
+
+      aValue = aValue.toLowerCase();
+      bValue = bValue.toLowerCase();
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
   return (
     <div className="content-list">
-      <button onClick={startAdding}>Add New Content</button>
+      <div style={{ marginBottom: '10px' }}>
+        <button onClick={startAdding}>Add New Content</button>
+        <input
+          type="text"
+          placeholder="Search by name, content type, age rating, date..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className='search-field'
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Content type</th>
+            <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
+              Name {sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('contentType')} style={{ cursor: 'pointer' }}>
+              Content Type {sortField === 'contentType' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
             <th>Poster URL</th>
-            <th>Age rating</th>
-            <th>Is active</th>
-            <th>Created At</th>
+            <th onClick={() => handleSort('ageRating')} style={{ cursor: 'pointer' }}>
+              Age Rating {sortField === 'ageRating' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th>Is Active</th>
+            <th onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer' }}>
+              Created At {sortField === 'createdAt' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-        {contentList.map((content, index) => {
-          const contentType = contentTypes.find(type => type.id === content.contentTypeId);
-
-          return (
-            <tr key={content.id}>
-              <td>{content.name}</td>
-              <td>{contentType ? contentType.name : 'Unknown'}</td>
-              <td>
-                {content.posterUrl ? (
-                  <a href={content.posterUrl} target="_blank" rel="noopener noreferrer">
-                    View Poster
-                  </a>
-                ) : (
-                  'No poster'
-                )}
-              </td>
-              <td>{content.ageRating || '-'}</td>
-              <td data-status={content.isActive ? "active" : "notactive"}>
-                {content.isActive ? 'Yes' : 'No'}
-              </td>
-              <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString('en-US') : '-'}</td>
-              <td>
-                <button onClick={() => startEditing(content, index)}>Edit</button>
-                <button onClick={() => onDeleteContent(index)}>Delete</button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-
+          {filteredAndSortedContent.map((content, index) => {
+            const contentType = contentTypes.find(type => type.id === content.contentTypeId);
+            return (
+              <tr key={content.id}>
+                <td>{content.name}</td>
+                <td>{contentType ? contentType.name : 'Unknown'}</td>
+                <td>
+                  {content.posterUrl ? (
+                    <a href={content.posterUrl} target="_blank" rel="noopener noreferrer">
+                      View Poster
+                    </a>
+                  ) : (
+                    'No poster'
+                  )}
+                </td>
+                <td>{content.ageRating || '-'}</td>
+                <td data-status={content.isActive ? "active" : "notactive"}>
+                  {content.isActive ? 'Yes' : 'No'}
+                </td>
+                <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString('en-US') : '-'}</td>
+                <td>
+                  <button onClick={() => startEditing(content, index)}>Edit</button>
+                  <button onClick={() => onDeleteContent(index)}>Delete</button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
       </table>
+
       {isEditorVisible && (
         <ContentEdit
           content={currentContent}
