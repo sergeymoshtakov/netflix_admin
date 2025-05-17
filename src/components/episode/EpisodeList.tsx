@@ -37,6 +37,12 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<null | keyof Episode | 'contentName'>(
+    null
+  );
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
   const startAdding = () => {
     setCurrentEpisode({
       id: Date.now(),
@@ -80,23 +86,87 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
     return content ? content.name : 'Unknown';
   };
 
+  const handleSort = (
+    field: keyof Episode | 'contentName'
+  ) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const filteredAndSortedEpisodes = [...episodes]
+    .filter((ep) => {
+      const contentName = getContentName(ep.contentId);
+      return (
+        ep.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        contentName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      if (!sortField) return 0;
+
+      let aVal: string | number = '';
+      let bVal: string | number = '';
+
+      if (sortField === 'contentName') {
+        aVal = getContentName(a.contentId).toLowerCase();
+        bVal = getContentName(b.contentId).toLowerCase();
+      } else if (sortField === 'releaseDate') {
+        aVal = a.releaseDate || '';
+        bVal = b.releaseDate || '';
+      } else {
+        aVal = (a[sortField] ?? '').toString().toLowerCase();
+        bVal = (b[sortField] ?? '').toString().toLowerCase();
+      }
+
+      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
   return (
     <div className="episode-list">
-      <button onClick={startAdding}>Add Episode</button>
+      <div style={{ marginBottom: 10 }}>
+        <button onClick={startAdding}>Add Episode</button>
+        <input
+          type="text"
+          placeholder="Search by name or content"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ marginRight: 10 }}
+          className="search-field"
+        />
+      </div>
+
       <table>
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Content</th>
-            <th>Season</th>
-            <th>Episode</th>
-            <th>Duration</th>
-            <th>Release</th>
+            <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
+              Name {sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('contentName')} style={{ cursor: 'pointer' }}>
+              Content {sortField === 'contentName' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('seasonNumber')} style={{ cursor: 'pointer' }}>
+              Season {sortField === 'seasonNumber' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('episodeNumber')} style={{ cursor: 'pointer' }}>
+              Episode {sortField === 'episodeNumber' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('durationMin')} style={{ cursor: 'pointer' }}>
+              Duration {sortField === 'durationMin' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
+            <th onClick={() => handleSort('releaseDate')} style={{ cursor: 'pointer' }}>
+              Release {sortField === 'releaseDate' && (sortDirection === 'asc' ? '▲' : '▼')}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {episodes.map((ep, index) => (
+          {filteredAndSortedEpisodes.map((ep, index) => (
             <tr key={ep.id}>
               <td>{ep.name}</td>
               <td>{getContentName(ep.contentId)}</td>
