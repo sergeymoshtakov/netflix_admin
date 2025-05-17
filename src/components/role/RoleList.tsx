@@ -22,6 +22,9 @@ const RoleList: React.FC<RoleListProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
   const startAdding = () => {
     setCurrentRole({ id: Date.now(), name: '' });
     setIsEditMode(false);
@@ -52,6 +55,8 @@ const RoleList: React.FC<RoleListProps> = ({
     setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
   };
 
+  const sortIcon = sortOrder === 'asc' ? '▲' : '▼';
+
   const filteredRoles = roles
     .filter((role) => role.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
@@ -62,7 +67,13 @@ const RoleList: React.FC<RoleListProps> = ({
       return 0;
     });
 
-  const sortIcon = sortOrder === 'asc' ? '▲' : '▼';
+  const totalPages = Math.ceil(filteredRoles.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedRoles = filteredRoles.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
+  };
 
   return (
     <div className="role-list">
@@ -72,9 +83,29 @@ const RoleList: React.FC<RoleListProps> = ({
           type="text"
           placeholder="Search by name"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           className="search-field"
         />
+        <div className="pagination-control">
+          <label htmlFor="itemsPerPage">Items per page:</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((count) => (
+              <option key={count} value={count}>
+                {count}
+              </option>
+            ))}
+          </select>
+      </div>
       </div>
 
       <table>
@@ -87,17 +118,29 @@ const RoleList: React.FC<RoleListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredRoles.map((role, index) => (
+          {paginatedRoles.map((role, index) => (
             <tr key={role.id}>
               <td>{role.name}</td>
               <td>
-                <button onClick={() => startEditing(role, index)}>Edit</button>
-                <button onClick={() => onDeleteRole(index)}>Delete</button>
+                <button onClick={() => startEditing(role, index + startIndex)}>Edit</button>
+                <button onClick={() => onDeleteRole(index + startIndex)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Prev
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
 
       {isEditorVisible && (
         <RoleEdit

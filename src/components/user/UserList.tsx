@@ -34,6 +34,9 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
   const [sortField, setSortField] = useState<keyof AppUser | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   const startAdding = () => {
     setCurrentUser({
       id: Date.now(),
@@ -102,6 +105,12 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredAndSortedUsers.length / itemsPerPage);
+  const paginatedUsers = filteredAndSortedUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="user-list">
       <div style={{ marginBottom: '10px' }}>
@@ -110,9 +119,29 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
           type="text"
           placeholder="Search by username, name, email, phone..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           className="search-field"
         />
+        <div className="pagination-control" style={{ marginTop: '10px' }}>
+          <label htmlFor="itemsPerPage">Items per page:</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((count) => (
+              <option key={count} value={count}>
+                {count}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <table>
@@ -138,27 +167,48 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
           </tr>
         </thead>
         <tbody>
-          {filteredAndSortedUsers.map((user, index) => (
-            <tr key={user.id}>
-              <td>{user.username}</td>
-              <td>{user.firstname}</td>
-              <td>{user.surname}</td>
-              <td>{user.email}</td>
-              <td>{user.phone_num}</td>
-              <td data-status={user.isBanned ? 'banned' : 'active'}>
-                {user.isBanned ? 'Banned' : 'Active'}
-              </td>
-              <td>
-                <button onClick={() => startEditing(user, index)}>Edit</button>
-                <button onClick={() => toggleBanUser(index)}>
-                  {user.isBanned ? 'Unban' : 'Ban'}
-                </button>
-                <button onClick={() => onDeleteUser(index)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+          {paginatedUsers.map((user, index) => {
+            const globalIndex = (currentPage - 1) * itemsPerPage + index;
+            return (
+              <tr key={user.id}>
+                <td>{user.username}</td>
+                <td>{user.firstname}</td>
+                <td>{user.surname}</td>
+                <td>{user.email}</td>
+                <td>{user.phone_num}</td>
+                <td data-status={user.isBanned ? 'banned' : 'active'}>
+                  {user.isBanned ? 'Banned' : 'Active'}
+                </td>
+                <td>
+                  <button onClick={() => startEditing(user, globalIndex)}>Edit</button>
+                  <button onClick={() => toggleBanUser(globalIndex)}>
+                    {user.isBanned ? 'Unban' : 'Ban'}
+                  </button>
+                  <button onClick={() => onDeleteUser(globalIndex)}>Delete</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+
+      <div className="pagination-control" style={{ marginTop: '10px' }}>
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
 
       {isEditorVisible && (
         <UserEdit

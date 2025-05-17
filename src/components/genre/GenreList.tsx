@@ -15,12 +15,21 @@ const GenreList: React.FC<GenreListProps> = ({
   onEditGenre,
   onDeleteGenre,
 }) => {
-  const [currentGenre, setCurrentGenre] = useState<Genre>({ id: 0, name: '', imageUrl: '', description: '', tags: ''});
+  const [currentGenre, setCurrentGenre] = useState<Genre>({
+    id: 0,
+    name: '',
+    imageUrl: '',
+    description: '',
+    tags: ''
+  });
   const [isEditorVisible, setIsEditorVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const startAdding = () => {
     setCurrentGenre({ id: Date.now(), name: '', imageUrl: '', description: '', tags: '' });
@@ -62,19 +71,45 @@ const GenreList: React.FC<GenreListProps> = ({
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredGenres.length / itemsPerPage);
+  const paginatedGenres = filteredGenres.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const sortIcon = sortOrder === 'asc' ? '▲' : '▼';
 
   return (
     <div className="genre-list">
-      <div style={{ marginBottom: '10px' }}>
+      <div className="role-controls">
         <button onClick={startAdding}>Add New Genre</button>
         <input
           type="text"
           placeholder="Search by name"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           className="search-field"
         />
+        <div className="pagination-control">
+          <label htmlFor="itemsPerPage">Items per page:</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((count) => (
+              <option key={count} value={count}>
+                {count}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <table>
@@ -90,28 +125,50 @@ const GenreList: React.FC<GenreListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredGenres.map((genre, index) => (
-            <tr key={genre.id}>
-              <td>{genre.name}</td>
-              <td>
-                {genre.imageUrl ? (
-                  <a href={genre.imageUrl} target="_blank" rel="noopener noreferrer">
-                    View Image
-                  </a>
-                ) : (
-                  'No image'
-                )}
-              </td>
-              <td>{genre.description}</td>
-              <td>{genre.tags}</td>
-              <td>
-                <button onClick={() => startEditing(genre, index)}>Edit</button>
-                <button onClick={() => onDeleteGenre(index)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+          {paginatedGenres.map((genre, index) => {
+            const globalIndex = (currentPage - 1) * itemsPerPage + index;
+            return (
+              <tr key={genre.id}>
+                <td>{genre.name}</td>
+                <td>
+                  {genre.imageUrl ? (
+                    <a href={genre.imageUrl} target="_blank" rel="noopener noreferrer">
+                      View Image
+                    </a>
+                  ) : (
+                    'No image'
+                  )}
+                </td>
+                <td>{genre.description}</td>
+                <td>{genre.tags}</td>
+                <td>
+                  <button onClick={() => startEditing(genre, globalIndex)}>Edit</button>
+                  <button onClick={() => onDeleteGenre(globalIndex)}>Delete</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+
+      {/* Pagination navigation */}
+      <div className="pagination-control" style={{ marginTop: '10px' }}>
+        <button
+          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
+      </div>
 
       {isEditorVisible && (
         <GenreEdit

@@ -192,11 +192,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <div>
-        <h1 className="page-title">Cinemate: Admin Panel</h1>
         {!currentUser ? (
           <Login users={users} onLogin={handleLogin} />
         ) : (
           <div className='body'>
+            <h1 className="page-title">Cinemate: Admin Panel</h1>
             <NavBar onLogout={handleLogout} currentUser={currentUser} />
             <main>
             <Routes>

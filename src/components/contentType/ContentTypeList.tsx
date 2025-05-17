@@ -28,6 +28,9 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
   const startAdding = () => {
     setCurrentContentType({
       id: Date.now(),
@@ -63,7 +66,7 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
 
-  const filteredAndSortedContentTypes = [...contentTypes]
+  const filteredContentTypes = [...contentTypes]
     .filter((ct) => ct.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
       const nameA = a.name.toLowerCase();
@@ -73,6 +76,14 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredContentTypes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedContentTypes = filteredContentTypes.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
+  };
+
   return (
     <div className="content-type-list">
       <div style={{ marginBottom: '10px' }}>
@@ -81,9 +92,29 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
           type="text"
           placeholder="Search by name..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1); // сбрасываем на первую страницу при поиске
+          }}
           className="search-field"
         />
+        <div className="pagination-control">
+          <label htmlFor="itemsPerPage">Items per page:</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((count) => (
+              <option key={count} value={count}>
+                {count}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <table>
@@ -98,19 +129,31 @@ const ContentTypeList: React.FC<ContentTypeListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredAndSortedContentTypes.map((ct, index) => (
+          {paginatedContentTypes.map((ct, index) => (
             <tr key={ct.id}>
               <td>{ct.name}</td>
               <td>{ct.description}</td>
               <td>{ct.tags}</td>
               <td>
-                <button onClick={() => startEditing(ct, index)}>Edit</button>
-                <button onClick={() => onDeleteContentType(index)}>Delete</button>
+                <button onClick={() => startEditing(ct, index + startIndex)}>Edit</button>
+                <button onClick={() => onDeleteContentType(index + startIndex)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Prev
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
 
       {isEditorVisible && (
         <ContentTypeEdit

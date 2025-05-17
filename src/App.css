@@ -369,3 +369,26 @@ main{
   border-radius: 5px;
   border: none;
 }
+
+.pagination-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.pagination-control select {
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pagination-control select:hover {
+  background-color: #f0f0f0;
+}

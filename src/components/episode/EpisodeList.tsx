@@ -43,6 +43,9 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
   );
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+
   const startAdding = () => {
     setCurrentEpisode({
       id: Date.now(),
@@ -97,35 +100,43 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
     }
   };
 
-  const filteredAndSortedEpisodes = [...episodes]
-    .filter((ep) => {
-      const contentName = getContentName(ep.contentId);
-      return (
-        ep.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contentName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    })
-    .sort((a, b) => {
-      if (!sortField) return 0;
+  const filteredEpisodes = episodes.filter((ep) => {
+    const contentName = getContentName(ep.contentId);
+    return (
+      ep.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      contentName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
-      let aVal: string | number = '';
-      let bVal: string | number = '';
+  const sortedEpisodes = [...filteredEpisodes].sort((a, b) => {
+    if (!sortField) return 0;
 
-      if (sortField === 'contentName') {
-        aVal = getContentName(a.contentId).toLowerCase();
-        bVal = getContentName(b.contentId).toLowerCase();
-      } else if (sortField === 'releaseDate') {
-        aVal = a.releaseDate || '';
-        bVal = b.releaseDate || '';
-      } else {
-        aVal = (a[sortField] ?? '').toString().toLowerCase();
-        bVal = (b[sortField] ?? '').toString().toLowerCase();
-      }
+    let aVal: string | number = '';
+    let bVal: string | number = '';
 
-      if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-      if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-      return 0;
-    });
+    if (sortField === 'contentName') {
+      aVal = getContentName(a.contentId).toLowerCase();
+      bVal = getContentName(b.contentId).toLowerCase();
+    } else if (sortField === 'releaseDate') {
+      aVal = a.releaseDate || '';
+      bVal = b.releaseDate || '';
+    } else {
+      aVal = (a[sortField] ?? '').toString().toLowerCase();
+      bVal = (b[sortField] ?? '').toString().toLowerCase();
+    }
+
+    if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+    if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const totalPages = Math.ceil(sortedEpisodes.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedEpisodes = sortedEpisodes.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
+  };
 
   return (
     <div className="episode-list">
@@ -135,10 +146,30 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
           type="text"
           placeholder="Search by name or content"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1);
+          }}
           style={{ marginRight: 10 }}
           className="search-field"
         />
+        <div className="pagination-control">
+          <label htmlFor="itemsPerPage">Items per page:</label>
+          <select
+            id="itemsPerPage"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            {[5, 10, 20, 50].map((count) => (
+              <option key={count} value={count}>
+                {count}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <table>
@@ -166,7 +197,7 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredAndSortedEpisodes.map((ep, index) => (
+          {paginatedEpisodes.map((ep, index) => (
             <tr key={ep.id}>
               <td>{ep.name}</td>
               <td>{getContentName(ep.contentId)}</td>
@@ -175,13 +206,25 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
               <td>{ep.durationMin} min</td>
               <td>{ep.releaseDate ? new Date(ep.releaseDate).toLocaleDateString('en-US') : '-'}</td>
               <td>
-                <button onClick={() => startEditing(ep, index)}>Edit</button>
-                <button onClick={() => onDeleteEpisode(index)}>Delete</button>
+                <button onClick={() => startEditing(ep, index + startIndex)}>Edit</button>
+                <button onClick={() => onDeleteEpisode(index + startIndex)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div style={{ marginTop: '10px' }}>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Prev
+        </button>
+        <span style={{ margin: '0 10px' }}>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
 
       {isEditorVisible && (
         <EpisodeEdit
