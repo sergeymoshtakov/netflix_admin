@@ -47,6 +47,7 @@ button:hover{
 
 .user-list, .content-list, .role-list, .genre-list, .content-type-list, .actor-list, .episode-list {
   padding: 10px;
+  overflow-x: auto;
 }
 
 table {
@@ -56,6 +57,7 @@ table {
   background-color: #1e1e1e;
   border-radius: 8px;
   overflow: hidden;
+  min-width: 200px;
 }
 
 th, td {
