@@ -36,22 +36,7 @@ const App: React.FC = () => {
     }
   ];
 
-  const [users, setUsers] = useState<AppUser[]>([
-    {
-      id: 1,
-      username: 'admin',
-      firstname: 'Admin',
-      surname: 'User',
-      email: 'admin@example.com',
-      phone_num: '1234567890',
-      enc_password: 'admin123',
-      avatar: '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      roles: [initialRoles[0]], // Роль "admin"
-      isBanned: false,
-    },
-  ]);
+  const [users, setUsers] = useState<AppUser[]>([]);
   const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -65,8 +50,26 @@ const App: React.FC = () => {
     setCurrentUser(user);
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
+  const handleLogout = async () => {
+    try {
+      const headers = new Headers();
+      const response = await fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        headers: headers,
+      });
+
+      if (response.ok) {
+        console.log('Successfully logged out from the backend.');
+      } else {
+        console.error('Backend logout failed. Status:', response.status, response.statusText);
+        const errorText = await response.text(); 
+        console.error('Backend logout error response body:', errorText);
+      }
+    } catch (error) {
+      console.error('Network error during backend logout attempt:', error);
+    } finally {
+      setCurrentUser(null);
+    }
   };
 
   const handleAddUser = (user: AppUser) => {
@@ -193,7 +196,8 @@ const App: React.FC = () => {
     <Router>
       <div>
         {!currentUser ? (
-          <Login users={users} onLogin={handleLogin} />
+          // Убедитесь, что пропс `users` удален отсюда, логин теперь через API
+          <Login onLogin={handleLogin} />
         ) : (
           <div className='body'>
             <h1 className="page-title">Cinemate: Admin Panel</h1>

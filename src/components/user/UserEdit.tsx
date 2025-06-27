@@ -37,8 +37,8 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
     if (!formData.username) newErrors.username = 'Username is required.';
     if (!formData.email) newErrors.email = 'Email is required.';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format.';
-    if (!formData.enc_password) newErrors.enc_password = 'Password is required.';
-    else if (formData.enc_password.length < 6) newErrors.enc_password = 'Password must be at least 6 characters.';
+    if (!formData.encPassword) newErrors.encPassword = 'Password is required.';
+    else if (formData.encPassword.length < 6) newErrors.encPassword = 'Password must be at least 6 characters.';
 
     setErrors(newErrors);
 
@@ -119,27 +119,27 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
           {errors.email && <div className="error">{errors.email}</div>}
         </div>
         <div>
-          <label htmlFor="phone_num">Phone</label>
+          <label htmlFor="phoneNum">Phone</label>
           <input
             type="text"
-            id="phone_num"
-            name="phone_num"
-            value={formData.phone_num}
+            id="phoneNum"
+            name="phoneNum"
+            value={formData.phoneNum}
             onChange={handleChange}
             required
           />
         </div>
         <div>
-          <label htmlFor="enc_password">Password</label>
+          <label htmlFor="encPassword">Password</label>
           <input
             type="password"
-            id="enc_password"
-            name="enc_password"
-            value={formData.enc_password}
+            id="encPassword"
+            name="encPassword"
+            value={formData.encPassword}
             onChange={handleChange}
             required
           />
-          {errors.enc_password && <div className="error">{errors.enc_password}</div>}
+          {errors.encPassword && <div className="error">{errors.encPassword}</div>}
         </div>
         <div>
           <label>Avatar</label>
@@ -162,11 +162,11 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
           <label>
             <input
               type="checkbox"
-              name="isBanned"
-              checked={formData.isBanned}
+              name="isActive"
+              checked={formData.isActive}
               onChange={handleChange}
             />
-            Is banned
+            Is Active
           </label>
         </div>
         <div>

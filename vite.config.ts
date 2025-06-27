@@ -37,6 +37,14 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/api/v1/auth/login': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/api/v1/auth/logout': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
     },
   },
 });

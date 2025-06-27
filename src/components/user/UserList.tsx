@@ -17,13 +17,13 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     firstname: '',
     surname: '',
     email: '',
-    phone_num: '',
-    enc_password: '',
+    phoneNum: '',
+    encPassword: '',
     avatar: '',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     roles: [],
-    isBanned: false,
+    isActive: false,
   });
 
   const [isEditorVisible, setIsEditorVisible] = useState(false);
@@ -44,13 +44,13 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
       firstname: '',
       surname: '',
       email: '',
-      phone_num: '',
-      enc_password: '',
+      phoneNum: '',
+      encPassword: '',
       avatar: '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       roles: [],
-      isBanned: false,
+      isActive: false,
     });
     setIsEditMode(false);
     setIsEditorVisible(true);
@@ -78,7 +78,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
 
   const toggleBanUser = (index: number) => {
     const updatedUsers = [...users];
-    updatedUsers[index].isBanned = !updatedUsers[index].isBanned;
+    updatedUsers[index].isActive = !updatedUsers[index].isActive;
     onEditUser(updatedUsers[index], index);
   };
 
@@ -93,7 +93,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
 
   const filteredAndSortedUsers = [...users]
     .filter((user) =>
-      [user.username, user.firstname, user.surname, user.email, user.phone_num]
+      [user.username, user.firstname, user.surname, user.email, user.phoneNum]
         .some((field) => field.toLowerCase().includes(searchTerm.toLowerCase()))
     )
     .sort((a, b) => {
@@ -159,8 +159,8 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
             <th onClick={() => handleSort('email')} style={{ cursor: 'pointer' }}>
               Email {sortField === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('phone_num')} style={{ cursor: 'pointer' }}>
-              Phone {sortField === 'phone_num' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th onClick={() => handleSort('phoneNum')} style={{ cursor: 'pointer' }}>
+              Phone {sortField === 'phoneNum' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
             <th>Status</th>
             <th>Actions</th>
@@ -175,14 +175,14 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
                 <td>{user.firstname}</td>
                 <td>{user.surname}</td>
                 <td>{user.email}</td>
-                <td>{user.phone_num}</td>
-                <td data-status={user.isBanned ? 'banned' : 'active'}>
-                  {user.isBanned ? 'Banned' : 'Active'}
+                <td>{user.phoneNum}</td>
+                <td data-status={user.isActive ? 'banned' : 'active'}>
+                  {user.isActive ? 'Banned' : 'Active'}
                 </td>
                 <td>
                   <button onClick={() => startEditing(user, globalIndex)}>Edit</button>
                   <button onClick={() => toggleBanUser(globalIndex)}>
-                    {user.isBanned ? 'Unban' : 'Ban'}
+                    {user.isActive ? 'Unban' : 'Ban'}
                   </button>
                   <button onClick={() => onDeleteUser(globalIndex)}>Delete</button>
                 </td>

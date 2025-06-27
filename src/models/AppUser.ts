@@ -4,35 +4,35 @@ export interface AppUser {
     firstname: string;
     surname: string;
     email: string;
-    phone_num: string;
-    enc_password: string;
+    phoneNum: string;
+    encPassword: string;
     avatar: string;
-    created_at: string;
-    updated_at: string;
+    createdAt: string;
+    updatedAt: string;
+    isActive: boolean;
     roles?: Role[];
-    isBanned: boolean;
-  }
-  
-  export interface Role {
+}
+
+export interface Role {
     id: number;
     name: string;
-  }
-  
-  export interface UserRole {
+}
+
+export interface UserRole {
     id: number;
     user_id: number;
     role_id: number;
-  }
-  
-  export interface ExternalAuth {
+}
+
+export interface ExternalAuth {
     id: number;
     user_id: number;
     provider_id: number;
     external_id: string;
     created_at: string;
-  }
-  
-  export interface AuthProvider {
+}
+
+export interface AuthProvider {
     id: number;
     name: string;
-  }
+}
