@@ -36,7 +36,22 @@ const App: React.FC = () => {
     }
   ];
 
-  const [users, setUsers] = useState<AppUser[]>([]);
+  const [users, setUsers] = useState<AppUser[]>([
+    {
+      id: 1,
+      username: 'admin',
+      firstname: 'Admin',
+      surname: 'User',
+      email: 'admin@gmail.com',
+      phoneNum: '1234567890',
+      encPassword: 'admin',
+      avatar: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      roles: [initialRoles[0]], // Роль "admin"
+      isActive: true,
+    },
+  ]);
   const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>(initialRoles);
   const [genres, setGenres] = useState<Genre[]>([]);

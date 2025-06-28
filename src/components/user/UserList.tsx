@@ -176,13 +176,13 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
                 <td>{user.surname}</td>
                 <td>{user.email}</td>
                 <td>{user.phoneNum}</td>
-                <td data-status={user.isActive ? 'banned' : 'active'}>
-                  {user.isActive ? 'Banned' : 'Active'}
+                <td data-status={user.isActive ? 'active' : 'banned'}>
+                  {user.isActive ? 'Active' : 'Banned'}
                 </td>
                 <td>
                   <button onClick={() => startEditing(user, globalIndex)}>Edit</button>
                   <button onClick={() => toggleBanUser(globalIndex)}>
-                    {user.isActive ? 'Unban' : 'Ban'}
+                    {user.isActive ? 'Ban' : 'Unban'}
                   </button>
                   <button onClick={() => onDeleteUser(globalIndex)}>Delete</button>
                 </td>
