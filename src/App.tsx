@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import UserList from './components/user/UserList';
@@ -16,11 +16,6 @@ import Footer from './components/Footer';
 import './App.css';
 
 const App: React.FC = () => {
-  const initialRoles: Role[] = [
-    { id: 1, name: 'admin' },
-    { id: 2, name: 'user' },
-  ];
-
   const initialContentTypes: ContentType[] = [
     {
       id: 1,
@@ -36,30 +31,49 @@ const App: React.FC = () => {
     }
   ];
 
-  const [users, setUsers] = useState<AppUser[]>([
-    {
-      id: 1,
-      username: 'admin',
-      firstname: 'Admin',
-      surname: 'User',
-      email: 'admin@gmail.com',
-      phoneNum: '1234567890',
-      encPassword: 'admin',
-      avatar: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      roles: [initialRoles[0]], // Роль "admin"
-      isActive: true,
-    },
-  ]);
+  const [users, setUsers] = useState<AppUser[]>([]);
   const [contentList, setContentList] = useState<Content[]>([]);
-  const [roles, setRoles] = useState<Role[]>(initialRoles);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
   const [contentTypes, setContentTypes] = useState<ContentType[]>(initialContentTypes);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [actors, setActors] = useState<Actor[]>([]);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [warnings, setWarnings] = useState<Warning[]>([]);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      if (!accessToken) return;
+
+      try {
+        const response = await fetch('/api/v1/roles', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data: { role: string }[] = await response.json();
+
+          const roles = data.map((item, index) => ({
+            id: index + 1,
+            name: item.role
+          }));
+          setRoles(roles);
+        } else {
+          console.error('Failed to fetch roles. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching roles:', error);
+      }
+    };
+
+    fetchRoles();
+  }, [accessToken]);
 
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
@@ -67,10 +81,15 @@ const App: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const headers = new Headers();
       const response = await fetch('/api/v1/auth/logout', {
         method: 'POST',
-        headers: headers,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          refreshToken: refreshToken,
+        }),
       });
 
       if (response.ok) {
@@ -211,8 +230,7 @@ const App: React.FC = () => {
     <Router>
       <div>
         {!currentUser ? (
-          // Убедитесь, что пропс `users` удален отсюда, логин теперь через API
-          <Login onLogin={handleLogin} />
+          <Login onLogin={handleLogin} setRefreshToken={setRefreshToken} setAccessToken={setAccessToken} />
         ) : (
           <div className='body'>
             <h1 className="page-title">Cinemate: Admin Panel</h1>

@@ -5,6 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/api/v1/roles': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/genres': {
         target: 'http://localhost:8080',
         changeOrigin: true,

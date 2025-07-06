@@ -6,6 +6,8 @@ import closedEyeIcon from '../assets/closed_eye.png';
 
 interface LoginProps {
   onLogin: (user: AppUser) => void;
+  setRefreshToken: (token: string) => void;
+  setAccessToken: (token: string) => void;
 }
 
 // Define interface for the structure of a single userRole link object
@@ -26,7 +28,7 @@ interface AppUserWithLinks extends AppUser {
   };
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -67,6 +69,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       // Log the tokens to the console
       console.log('Access Token:', loginData.accessToken);
       console.log('Refresh Token:', loginData.refreshToken);
+      setRefreshToken(loginData.refreshToken);
+      setAccessToken(loginData.accessToken);
 
       // 2. Now that we have the tokens, fetch ALL app users
       const userHeaders = new Headers();
