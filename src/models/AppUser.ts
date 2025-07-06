@@ -1,3 +1,17 @@
+export interface IRawUser {
+  id: number;
+  username: string;
+  firstname: string;
+  surname: string;
+  email: string;
+  phoneNum: string;
+  avatar: string;
+  createdAt: string;
+  updatedAt: string;
+  active: boolean;
+  roles: string[];
+}
+
 export interface AppUser {
     id: number;
     username: string;

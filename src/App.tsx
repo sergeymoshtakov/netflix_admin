@@ -10,7 +10,7 @@ import ActorList from './components/actor/ActorList';
 import EpisodeList from './components/episode/EpisodeList';
 import WarningList from './components/warning/WarningList';
 import NavBar from './components/NavBar';
-import { AppUser, Role } from './models/AppUser';
+import { AppUser, IRawUser, Role } from './models/AppUser';
 import { Content, ContentType, Genre, Actor, Episode, Warning } from './models/Series';
 import Footer from './components/Footer';
 import './App.css';
@@ -73,6 +73,77 @@ const App: React.FC = () => {
     };
 
     fetchRoles();
+  }, [accessToken]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!accessToken || roles.length === 0) return;
+
+      try {
+        const response = await fetch('/api/v1/users', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          const mappedUsers = data.data.map((user: IRawUser) => ({
+            id: user.id,
+            username: user.username,
+            firstname: user.firstname,
+            surname: user.surname,
+            email: user.email,
+            phoneNum: user.phoneNum,
+            encPassword: '',
+            avatar: user.avatar,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+            isActive: user.active,
+            roles: user.roles.map((roleName: string) => {
+              const foundRole = roles.find(r => r.name === roleName);
+              return foundRole ? { id: foundRole.id, name: foundRole.name } : { id: 0, name: roleName };
+            }),
+          }));
+
+          setUsers(mappedUsers);
+        } else {
+          console.error('Failed to fetch users. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, [accessToken, roles]);
+
+  useEffect(() => {
+    const fetchActors = async () => {
+
+      try {
+        const response = await fetch('/api/v1/actors/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data: Actor[] = await response.json();
+          setActors(data);
+        } else {
+          console.error('Failed to fetch actors. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching actors:', error);
+      }
+    };
+
+    fetchActors();
   }, [accessToken]);
 
   const handleLogin = (user: AppUser) => {
@@ -181,8 +252,39 @@ const App: React.FC = () => {
     setContentTypes(updatedContentTypes);
   };
 
-  const handleAddActor = (actor: Actor) => {
-    setActors([...actors, actor]);
+const handleAddActor = async (actor: Actor) => {
+    try {
+      const response = await fetch('/api/v1/actors', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: actor.name,
+          surname: actor.surname,
+          biography: actor.biography || ''
+        }),
+      });
+
+      if (response.ok) {
+        const fetchResponse = await fetch('/api/v1/actors/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (fetchResponse.ok) {
+          const data: Actor[] = await fetchResponse.json();
+          setActors(data);
+        }
+      } else {
+        console.error('Failed to add actor. Status:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding actor:', error);
+    }
   };
 
   const handleEditActor = (actor: Actor, index: number) => {
