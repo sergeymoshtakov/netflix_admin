@@ -29,6 +29,14 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/api/v1/content-types/all': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/api/v1/content-types': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/genres': {
         target: 'http://localhost:8080',
         changeOrigin: true,
@@ -42,10 +50,6 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/roles': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
-      '/contentTypes': {
         target: 'http://localhost:8080',
         changeOrigin: true,
       },

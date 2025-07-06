@@ -16,26 +16,12 @@ import Footer from './components/Footer';
 import './App.css';
 
 const App: React.FC = () => {
-  const initialContentTypes: ContentType[] = [
-    {
-      id: 1,
-      name: 'TV Series',
-      description: 'A multi-episode audiovisual production released in parts.',
-      tags: 'series,episodes,show,tv'
-    },
-    {
-      id: 2,
-      name: 'Movie',
-      description: 'A feature-length audiovisual production with a complete storyline.',
-      tags: 'movie,film,cinema,feature'
-    }
-  ];
 
   const [users, setUsers] = useState<AppUser[]>([]);
   const [contentList, setContentList] = useState<Content[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [contentTypes, setContentTypes] = useState<ContentType[]>(initialContentTypes);
+  const [contentTypes, setContentTypes] = useState<ContentType[]>([]);
   const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [actors, setActors] = useState<Actor[]>([]);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -146,6 +132,31 @@ const App: React.FC = () => {
     fetchActors();
   }, [accessToken]);
 
+  useEffect(() => {
+    const fetchContentTypes = async () => {
+
+      try {
+        const response = await fetch('/api/v1/content-types/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data: ContentType[] = await response.json();
+          setContentTypes(data);
+        } else {
+          console.error('Failed to fetch content types. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching content types:', error);
+      }
+    };
+
+    fetchContentTypes();
+  }, [accessToken]);
+
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
   };
@@ -237,8 +248,39 @@ const App: React.FC = () => {
     setGenres(updatedGenres);
   };
 
-  const handleAddContentType = (contentType: ContentType) => {
-    setContentTypes([...contentTypes, contentType]);
+  const handleAddContentType = async (contentType: ContentType) => {
+    try {
+      const response = await fetch('/api/v1/content-types', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: contentType.name,
+          description: contentType.description,
+          tags: contentType.tags || ''
+        }),
+      });
+
+      if (response.ok) {
+        const fetchResponse = await fetch('/api/v1/content-types/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (fetchResponse.ok) {
+          const data: ContentType[] = await fetchResponse.json();
+          setContentTypes(data);
+        }
+      } else {
+        console.error('Failed to add content type. Status:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding content type:', error);
+    }
   };
 
   const handleEditContentType = (contentType: ContentType, index: number) => {
@@ -252,7 +294,7 @@ const App: React.FC = () => {
     setContentTypes(updatedContentTypes);
   };
 
-const handleAddActor = async (actor: Actor) => {
+  const handleAddActor = async (actor: Actor) => {
     try {
       const response = await fetch('/api/v1/actors', {
         method: 'POST',
