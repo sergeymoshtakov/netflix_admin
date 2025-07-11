@@ -66,7 +66,7 @@ const App: React.FC = () => {
       if (!accessToken || roles.length === 0) return;
 
       try {
-        const response = await fetch('/api/v1/users?size=20', {
+        const response = await fetch('api/v1/users', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -207,6 +207,66 @@ const App: React.FC = () => {
     fetchContentTypes();
   }, [accessToken]);
 
+  useEffect(() => {
+    const fetchContents = async () => {
+      if (!accessToken) return;
+
+      const searchParams = {
+        page: 1,
+        size: 20,
+        sortBy: 'id',
+        isAsc: true,
+      };
+
+      const queryString = new URLSearchParams(
+        Object.entries(searchParams).reduce((acc, [key, val]) => {
+          if (val !== undefined && val !== null) acc[key] = String(val);
+          return acc;
+        }, {} as Record<string, string>)
+      ).toString();
+
+      try {
+        const response = await fetch(`/api/v1/admin/contents?${queryString}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+
+          const mappedContents: Content[] = data.data.map((item: Content) => ({
+            id: item.id,
+            name: item.name,
+            contentTypeId: item.contentTypeId,
+            posterUrl: item.posterUrl,
+            trailerUrl: item.trailerUrl,
+            videoUrl: item.videoUrl,
+            description: item.description,
+            durationMin: item.durationMin,
+            ageRating: item.ageRating,
+            releaseDate: item.releaseDate,
+            isActive: item.isActive,
+            createdAt: item.createdAt,
+            updatedAt: item.updatedAt,
+            genreIds: item.genreIds,
+            actorIds: item.actorIds,
+            warningIds: item.warningIds,
+          }));
+
+          setContentList(mappedContents);
+        } else {
+          console.error('Failed to fetch contents. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error while fetching contents:', error);
+      }
+    };
+    fetchContents();
+  });
+
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
   };
@@ -340,19 +400,97 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAddContent = (content: Content) => {
+  const handleAddContent = async (content: Content & { posterFile?: File; trailerFile?: File; videoFile?: File }) => {
     setContentList([...contentList, content]);
+    try {
+      const formData = new FormData();
+
+      const metadata = {
+        name: content.name,
+        contentType: contentTypes.find(ct => ct.id === content.contentTypeId)?.name || '',
+        description: content.description,
+        durationMin: content.durationMin,
+        ageRating: content.ageRating,
+        releaseDate: content.releaseDate,
+        actors: content.actorIds,
+        genres: content.genreIds,
+        warnings: content.warningIds,
+        isActive: content.isActive ?? true,
+      };
+
+      formData.append("metadata", JSON.stringify(metadata));
+
+      if (content.posterFile) {
+        formData.append('poster', content.posterFile);
+      }
+      if (content.trailerFile) {
+        formData.append('trailer', content.trailerFile);
+      }
+      if (content.videoFile) {
+        formData.append('video', content.videoFile);
+      }
+
+      const response = await fetch('/api/v1/admin/contents', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Failed to add content:', await response.text());
+        return;
+      }
+
+      setContentList(prev => [...prev, content]);
+    } catch (error) {
+      console.error('Error adding content:', error);
+    }
   };
 
-  const handleEditContent = (content: Content, index: number) => {
-    const updatedSeries = [...contentList];
-    updatedSeries[index] = content;
-    setContentList(updatedSeries);
+  const handleEditContent = async (content: Content, index: number) => {
+    try {
+      const response = await fetch(`/api/v1/admin/contents/${content.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(content),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error while updating content: ${response.status}`);
+      }
+
+      const updatedList = [...contentList];
+      updatedList[index] = content;
+      setContentList(updatedList);
+    } catch (error) {
+      console.error('Error editing content:', error);
+    }
   };
 
-  const handleDeleteContent = (index: number) => {
-    const updatedContent = contentList.filter((_, i) => i !== index);
-    setContentList(updatedContent);
+  const handleDeleteContent = async (index: number, id: number) => {
+    try {
+      const response = await fetch(`/api/v1/admin/contents/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error while deliting content: ${response.status}`);
+      }
+
+      const updatedContent = contentList.filter((_, i) => i !== index);
+      setContentList(updatedContent);
+    } catch (error) {
+      console.error('Cannot delete content:', error);
+    }
   };
 
   const handleEditRole = (role: Role, index: number) => {

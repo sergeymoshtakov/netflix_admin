@@ -22,6 +22,9 @@ export interface Content {
   genreIds?: number[];
   actorIds?: number[];
   warningIds?: number[];
+  posterFile?: File;
+  trailerFile?: File;
+  videoFile?: File;
 }
 
 export interface Episode {

@@ -6,7 +6,7 @@ interface ContentListProps {
   contentList: Content[];
   onAddContent: (content: Content) => void;
   onEditContent: (content: Content, index: number) => void;
-  onDeleteContent: (index: number) => void;
+  onDeleteContent: (index: number, id: number) => void;
   genres: Genre[];
   contentTypes: ContentType[];
   actors: Actor[];
@@ -211,7 +211,7 @@ const ContentList: React.FC<ContentListProps> = ({
                 <td>{content.createdAt ? new Date(content.createdAt).toLocaleDateString('en-US') : '-'}</td>
                 <td>
                   <button onClick={() => startEditing(content, globalIndex)}>Edit</button>
-                  <button onClick={() => onDeleteContent(globalIndex)}>Delete</button>
+                  <button onClick={() => onDeleteContent(globalIndex, content.id)}>Delete</button>
                 </td>
               </tr>
             );

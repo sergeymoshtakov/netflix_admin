@@ -25,6 +25,10 @@ const ContentEdit: React.FC<ContentEditProps> = ({
   const [formData, setFormData] = useState<Content>(content);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+  const [posterFile, setPosterFile] = useState<File | undefined>();
+  const [trailerFile, setTrailerFile] = useState<File | undefined>();
+  const [videoFile, setVideoFile] = useState<File | undefined>();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -47,7 +51,9 @@ const ContentEdit: React.FC<ContentEditProps> = ({
       return;
     }
 
-    setFormData({ ...formData, videoUrl: URL.createObjectURL(file) });
+    setVideoFile(file);
+    const url = URL.createObjectURL(file);
+    setFormData(prev => ({ ...prev, videoUrl: url }));
   };
 
   const handlePosterUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +72,10 @@ const ContentEdit: React.FC<ContentEditProps> = ({
       return;
     }
 
-    setFormData({ ...formData, posterUrl: URL.createObjectURL(file) });
+    setPosterFile(file);
+
+    const url = URL.createObjectURL(file);
+    setFormData(prev => ({ ...prev, posterUrl: url }));
   };
 
   const handleTrailerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +94,9 @@ const ContentEdit: React.FC<ContentEditProps> = ({
       return;
     }
 
-    setFormData({ ...formData, trailerUrl: URL.createObjectURL(file) });
+    setTrailerFile(file);
+    const url = URL.createObjectURL(file);
+    setFormData(prev => ({ ...prev, trailerUrl: url }));
   };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,14 +149,15 @@ const ContentEdit: React.FC<ContentEditProps> = ({
       ? new Date(formData.releaseDate).toISOString()
       : undefined;
 
-    const dataToSave = {
+    onSave({
       ...formData,
       releaseDate: isoReleaseDate,
       updatedAt: now,
       createdAt: isEditMode ? formData.createdAt : now,
-    };
-
-    onSave(dataToSave);
+      posterFile,
+      trailerFile,
+      videoFile,
+    });
   };
 
   return (
