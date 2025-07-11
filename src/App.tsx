@@ -133,6 +133,31 @@ const App: React.FC = () => {
   }, [accessToken]);
 
   useEffect(() => {
+    const fetchWarnings = async () => {
+
+      try {
+        const response = await fetch('/api/v1/warnings/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data: Warning[] = await response.json();
+          setWarnings(data);
+        } else {
+          console.error('Failed to fetch warnings. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching warnings:', error);
+      }
+    };
+
+    fetchWarnings();
+  }, [accessToken]);
+
+  useEffect(() => {
     const fetchGenres = async () => {
 
       try {
@@ -501,8 +526,27 @@ const App: React.FC = () => {
     setEpisodes(updatedEpisode);
   };
 
-  const handleAddWarning = (warning: Warning) => {
-    setWarnings([...warnings, warning]);
+  const handleAddWarning = async (warning: Warning) => {
+    try {
+      const response = await fetch('/api/v1/warnings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ name: warning.name }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Failed to add warning:', errorText);
+        return;
+      }
+
+      setWarnings([...warnings, warning]);
+    } catch (error) {
+      console.error('Error adding warning:', error);
+    }
   };
 
   const handleEditWarning = (warning: Warning, index: number) => {

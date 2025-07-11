@@ -41,6 +41,14 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/api/v1/warnings/all': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/api/v1/warnings': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/api/v1/content-types/all': {
         target: 'http://localhost:8080',
         changeOrigin: true,
@@ -66,10 +74,6 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/episodes': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      },
-      '/warnings': {
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
