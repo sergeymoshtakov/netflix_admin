@@ -33,6 +33,14 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/api/v1/genres/all': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+      '/api/v1/genres': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/api/v1/content-types/all': {
         target: 'http://localhost:8080',
         changeOrigin: true,

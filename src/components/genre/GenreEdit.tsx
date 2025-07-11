@@ -63,7 +63,12 @@ const GenreEdit: React.FC<GenreEditProps> = ({ genre, isEditMode, onSave, onCanc
     }
 
     const url = URL.createObjectURL(file);
-    setFormData({ ...formData, imageUrl: url });
+
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: url,
+      file: file
+    }));
   };
 
   return (

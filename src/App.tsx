@@ -133,6 +133,31 @@ const App: React.FC = () => {
   }, [accessToken]);
 
   useEffect(() => {
+    const fetchGenres = async () => {
+
+      try {
+        const response = await fetch('/api/v1/genres/all', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const data: Genre[] = await response.json();
+          setGenres(data);
+        } else {
+          console.error('Failed to fetch genres. Status:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+      }
+    };
+
+    fetchGenres();
+  }, [accessToken]);
+
+  useEffect(() => {
     const fetchContentTypes = async () => {
 
       try {
@@ -320,8 +345,42 @@ const App: React.FC = () => {
     setRoles([...roles, role]);
   };
 
-  const handleAddGenre = (genre: Genre) => {
-    setGenres([...genres, genre]);
+  const handleAddGenre = async (genre: Genre & { file?: File }) => {
+    const formData = new FormData();
+
+    const genreMetadata = {
+      name: genre.name,
+      description: genre.description,
+      tags: genre.tags
+    };
+
+    formData.append('metadata', JSON.stringify(genreMetadata));
+
+    if (genre.file) {
+      formData.append('image', genre.file);
+    } else {
+      console.error('Image file is required');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/v1/genres', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error('Failed to add genre:', await response.text());
+        return;
+      }
+
+      setGenres(prev => [...prev, genre]);
+    } catch (error) {
+      console.error('Error during addGenre:', error);
+    }
   };
 
   const handleEditGenre = (genre: Genre, index: number) => {

@@ -76,11 +76,11 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
     setIsEditorVisible(false);
   };
 
-  const toggleBanUser = (index: number) => {
-    const updatedUsers = [...users];
-    updatedUsers[index].isActive = !updatedUsers[index].isActive;
-    onEditUser(updatedUsers[index], index);
-  };
+  // const toggleBanUser = (index: number) => {
+  //   const updatedUsers = [...users];
+  //   updatedUsers[index].isActive = !updatedUsers[index].isActive;
+  //   onEditUser(updatedUsers[index], index);
+  // };
 
   const handleSort = (field: keyof AppUser) => {
     if (sortField === field) {
@@ -181,9 +181,7 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
                 </td>
                 <td>
                   <button onClick={() => startEditing(user, globalIndex)}>Edit</button>
-                  {/* <button onClick={() => toggleBanUser(globalIndex)}>
-                    {user.isActive ? 'Ban' : 'Unban'}
-                  </button> */}
+                  {/* <button onClick={() => toggleBanUser(globalIndex)}> {user.isActive ? 'Ban' : 'Unban'} </button> */}
                   <button onClick={() => onDeleteUser(user.id)}>Delete</button>
                 </td>
               </tr>
