@@ -6,7 +6,7 @@ interface EpisodeListProps {
   episodes: Episode[];
   onAddEpisode: (episode: Episode) => void;
   onEditEpisode: (episode: Episode, index: number) => void;
-  onDeleteEpisode: (index: number) => void;
+  onDeleteEpisode: (index: number, id: number) => void;
   contentList: Content[];
   contentTypes: ContentType[];
 }
@@ -207,7 +207,7 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
               <td>{ep.releaseDate ? new Date(ep.releaseDate).toLocaleDateString('en-US') : '-'}</td>
               <td>
                 <button onClick={() => startEditing(ep, index + startIndex)}>Edit</button>
-                <button onClick={() => onDeleteEpisode(index + startIndex)}>Delete</button>
+                <button onClick={() => onDeleteEpisode(index + startIndex, ep.id)}>Delete</button>
               </td>
             </tr>
           ))}

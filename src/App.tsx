@@ -267,6 +267,57 @@ const App: React.FC = () => {
     fetchContents();
   });
 
+  useEffect(() => {
+    const fetchEpisodes = async () => {
+      try {
+        const response = await fetch('/episodes', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const loadedEpisodes: Episode[] = data._embedded.episodes.map((ep: {
+          id: number;
+          name: string;
+          contentId: number;
+          seasonNumber: number;
+          episodeNumber: number;
+          durationMin: number;
+          description: string;
+          trailerUrl: string;
+          videoUrl: string;
+          releaseDate: string;
+          createdAt: string;
+        }) => ({
+          id: ep.id,
+          name: ep.name,
+          contentId: ep.contentId,
+          seasonNumber: ep.seasonNumber,
+          episodeNumber: ep.episodeNumber,
+          durationMin: ep.durationMin,
+          description: ep.description,
+          trailerUrl: ep.trailerUrl,
+          videoUrl: ep.videoUrl,
+          releaseDate: ep.releaseDate,
+          createdAt: ep.createdAt,
+        }));
+
+        setEpisodes(loadedEpisodes);
+      } catch (error) {
+        console.error('Error fetching episodes:', error);
+      }
+    };
+
+    fetchEpisodes();
+  });
+
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
   };
@@ -649,19 +700,100 @@ const App: React.FC = () => {
     setActors(updatedActor);
   };
 
-  const handleAddEpisode = (episode: Episode) => {
-    setEpisodes([...episodes, episode]);
+  const handleAddEpisode = async (episode: Episode) => {
+    const formData = new FormData();
+    const metadata = {
+      name: episode.name,
+      contentId: episode.contentId,
+      seasonNumber: episode.seasonNumber,
+      episodeNumber: episode.episodeNumber,
+      durationMin: episode.durationMin,
+      description: episode.description,
+      releaseDate: episode.releaseDate,
+    };
+    formData.append('metadata', JSON.stringify(metadata));
+
+    if (episode.trailerUrl instanceof File) {
+      formData.append('trailer', episode.trailerUrl);
+    }
+
+    if (episode.videoUrl instanceof File) {
+      formData.append('video', episode.videoUrl);
+    }
+
+    try{
+      const response = await fetch('/api/v1/admin/episodes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to add episode: ${response.statusText}`);
+      }
+
+      const savedEpisode = await response.json();
+      setEpisodes((prev) => [...prev, savedEpisode]);
+    } catch (error) {
+      console.error('Error adding episode:', error);
+    }
   };
 
-  const handleEditEpisode = (episode: Episode, index: number) => {
-    const updatedEpisode = [...episodes];
-    updatedEpisode[index] = episode;
-    setEpisodes(updatedEpisode);
+  const handleEditEpisode = async (episode: Episode, index: number) => {
+    try {
+      const response = await fetch(`/api/v1/admin/episodes/${episode.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          name: episode.name,
+          contentId: episode.contentId,
+          seasonNumber: episode.seasonNumber,
+          episodeNumber: episode.episodeNumber,
+          durationMin: episode.durationMin,
+          description: episode.description,
+          trailerUrl: typeof episode.trailerUrl === 'string' ? episode.trailerUrl : '',
+          videoUrl: typeof episode.videoUrl === 'string' ? episode.videoUrl : '',
+          releaseDate: episode.releaseDate,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update episode: ${response.statusText}`);
+      }
+
+      const updatedEpisode = [...episodes];
+      updatedEpisode[index] = episode;
+      setEpisodes(updatedEpisode);
+    } catch (error) {
+      console.error('Error editing episode:', error);
+    }
   };
 
-  const handleDeleteEpisode = (index: number) => {
-    const updatedEpisode = episodes.filter((_, i) => i !== index);
-    setEpisodes(updatedEpisode);
+  const handleDeleteEpisode = async (index: number, id: number) => {
+    try {
+      const response = await fetch(`/api/v1/admin/episodes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to delete episode: ${response.statusText}`);
+      }
+
+      const updatedEpisode = episodes.filter((_, i) => i !== index);
+      setEpisodes(updatedEpisode);
+    } catch (error) {
+      console.error('Error deleting episode:', error);
+    }
   };
 
   const handleAddWarning = async (warning: Warning) => {

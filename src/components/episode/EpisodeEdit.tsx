@@ -49,8 +49,7 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
       return;
     }
 
-    const url = URL.createObjectURL(file);
-    setFormData({ ...formData, [field]: url });
+    setFormData({ ...formData, [field]: file });
   };
 
   const validate = () => {
@@ -191,7 +190,7 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
             style={{ display: 'none' }} 
           />
           <label htmlFor="trailer" className="upload-button">Upload Trailer</label>
-          {formData.trailerUrl && (
+          {typeof formData.trailerUrl === 'string' && formData.trailerUrl && (
             <div>
               <a 
                 href={formData.trailerUrl} 
@@ -215,7 +214,7 @@ const EpisodeEdit: React.FC<EpisodeEditProps> = ({
             style={{ display: 'none' }}
           />
           <label htmlFor="video" className="upload-button">Upload Video</label>
-          {formData.videoUrl && (
+          {typeof formData.videoUrl === 'string' && formData.videoUrl && (
             <div>
               <a 
                 href={formData.videoUrl} 

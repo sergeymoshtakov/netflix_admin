@@ -21,9 +21,12 @@ export default defineConfig({
       '/api/v1/content-types/all',
       '/api/v1/content-types',
       '/api/v1/admin/contents',
+      '/api/v1/admin/episodes/',
       '/appUsers',
       '/roles',
       '/userRoles',
+      '/episodes',
+      '/trailers',
     ].map((path) => [
       path,
       {

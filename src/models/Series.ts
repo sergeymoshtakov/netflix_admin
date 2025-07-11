@@ -35,8 +35,8 @@ export interface Episode {
   episodeNumber: number;
   durationMin?: number;
   description?: string;
-  trailerUrl?: string;
-  videoUrl?: string;
+  videoUrl?: string | File;
+  trailerUrl?: string | File;
   releaseDate?: string;
   createdAt?: string;
 }
