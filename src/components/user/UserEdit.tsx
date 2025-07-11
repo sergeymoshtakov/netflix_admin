@@ -62,9 +62,17 @@ const UserEdit: React.FC<UserEditProps> = ({ user, roles, isEditMode, onSave, on
       return;
     }
 
-    const url = URL.createObjectURL(file);
-    setFormData({ ...formData, avatar: url });
-    setErrors((prev) => ({ ...prev, avatar: '' }));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      setFormData({ ...formData, avatar: result });
+      setErrors((prev) => ({ ...prev, avatar: '' }));
+    };
+    reader.readAsDataURL(file);
+
+    // const url = URL.createObjectURL(file);
+    // setFormData({ ...formData, avatar: url });
+    // setErrors((prev) => ({ ...prev, avatar: '' }));
   };
 
   return (

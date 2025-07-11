@@ -181,10 +181,10 @@ const UserList: React.FC<UserListProps> = ({ users, roles, onAddUser, onEditUser
                 </td>
                 <td>
                   <button onClick={() => startEditing(user, globalIndex)}>Edit</button>
-                  <button onClick={() => toggleBanUser(globalIndex)}>
+                  {/* <button onClick={() => toggleBanUser(globalIndex)}>
                     {user.isActive ? 'Ban' : 'Unban'}
-                  </button>
-                  <button onClick={() => onDeleteUser(globalIndex)}>Delete</button>
+                  </button> */}
+                  <button onClick={() => onDeleteUser(user.id)}>Delete</button>
                 </td>
               </tr>
             );

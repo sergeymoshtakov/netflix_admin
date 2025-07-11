@@ -66,7 +66,7 @@ const App: React.FC = () => {
       if (!accessToken || roles.length === 0) return;
 
       try {
-        const response = await fetch('/api/v1/users', {
+        const response = await fetch('/api/v1/users?size=20', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -188,19 +188,106 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAddUser = (user: AppUser) => {
-    setUsers([...users, user]);
+  const handleAddUser = async (user: AppUser) => {
+    try {
+      const formData = new FormData();
+      const userDto = {
+        username: user.username,
+        firstname: user.firstname,
+        surname: user.surname,
+        email: user.email,
+        password: user.encPassword,
+        phoneNum: user.phoneNum,
+        roles: user.roles?.map(role => role.name) || [],
+        isActive: user.isActive,
+      };
+
+      formData.append('metadata', JSON.stringify(userDto));
+
+      if (typeof user.avatar === 'string' && user.avatar.startsWith('data:image')) {
+        const response = await fetch(user.avatar);
+        const blob = await response.blob();
+        const file = new File([blob], 'avatar.png', { type: blob.type });
+        formData.append('avatar', file);
+      } else {
+        console.warn('Avatar is not a valid base64 image string. Skipping avatar upload.');
+      }
+
+      const response = await fetch('/api/v1/users/add', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.error('Failed to add user:', response.statusText);
+        return;
+      }
+
+      setUsers(prev => [...prev, user]);
+    } catch (error) {
+      console.error('Error adding user:', error);
+    }
   };
 
-  const handleEditUser = (user: AppUser, index: number) => {
-    const updatedUsers = [...users];
-    updatedUsers[index] = user;
-    setUsers(updatedUsers);
+  const handleEditUser = async (user: AppUser, index: number) => {
+    try {
+      const response = await fetch(`/api/v1/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          username: user.username,
+          firstname: user.firstname,
+          surname: user.surname,
+          email: user.email,
+          phoneNum: user.phoneNum,
+          password: user.encPassword,
+          roles: user.roles?.map(role => role.name || role),
+          isActive: user.isActive,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to update user ${user.id}:`, response.statusText);
+        return;
+      }
+
+      const updatedUsers = [...users];
+      updatedUsers[index] = user;
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error(`Error updating user ${user.id}:`, error);
+    }
   };
 
-  const handleDeleteUser = (index: number) => {
-    const updatedUsers = users.filter((_, i) => i !== index);
-    setUsers(updatedUsers);
+  const handleDeleteUser = async (index: number) => {
+    try {
+      const response = await fetch(`/api/v1/users/${index}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        console.error(`Failed to delete user ${index}:`, response.statusText);
+        return;
+      }
+
+      setUsers(prevUsers =>
+        prevUsers.map(user =>
+          user.id === index ? { ...user, isActive: false } : user
+        )
+      );
+    } catch (error) {
+      console.error(`Error deleting user ${index}:`, error);
+    }
   };
 
   const handleAddContent = (content: Content) => {

@@ -21,6 +21,10 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
+      '/api/v1/users/add': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
       '/api/v1/actors/all': {
         target: 'http://localhost:8080',
         changeOrigin: true,
