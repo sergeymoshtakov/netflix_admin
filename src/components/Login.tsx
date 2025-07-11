@@ -34,6 +34,8 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const API_BASE = 'http://cinemate.ddns.net:8081/api/v1';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -44,7 +46,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
       headers.set('Authorization', 'Basic ' + btoa(email + ':' + password));
 
       // 1. Send POST request to the login endpoint
-      const loginResponse = await fetch('/api/v1/auth/login', {
+      const loginResponse = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
         headers: headers,
       });
@@ -76,7 +78,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
       const userHeaders = new Headers();
       userHeaders.set('Authorization', `Bearer ${loginData.accessToken}`);
 
-      const allUsersResponse = await fetch('/appUsers', {
+      const allUsersResponse = await fetch(`${API_BASE}/appUsers`, {
         method: 'GET',
         headers: userHeaders,
       });
@@ -118,7 +120,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
 
       try {
         // First, fetch all userRoles
-        const userRolesResponse = await fetch('/userRoles', {
+        const userRolesResponse = await fetch(`${API_BASE}/userRoles`, {
           headers: userHeaders,
         });
 
@@ -165,7 +167,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
                   console.warn('Role endpoint returned non-JSON response for:', userRoleLink._links.role.href);
                   // Try alternative approach: extract role ID and fetch from /roles
                   const roleId = userRoleLink._links.role.href.split('/').pop();
-                  const allRolesResponse = await fetch('/roles', { headers: userHeaders });
+                  const allRolesResponse = await fetch(`${API_BASE}/roles`, { headers: userHeaders });
                   
                   if (allRolesResponse.ok) {
                     const allRolesData = await allRolesResponse.json();

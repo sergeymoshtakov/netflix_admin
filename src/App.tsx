@@ -29,12 +29,14 @@ const App: React.FC = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
+  const API_BASE = 'http://cinemate.ddns.net:8081';
+
   useEffect(() => {
     const fetchRoles = async () => {
       if (!accessToken) return;
 
       try {
-        const response = await fetch('/api/v1/roles', {
+        const response = await fetch(`${API_BASE}/api/v1/roles`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -66,7 +68,7 @@ const App: React.FC = () => {
       if (!accessToken || roles.length === 0) return;
 
       try {
-        const response = await fetch('api/v1/users', {
+        const response = await fetch(`${API_BASE}api/v1/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -111,7 +113,7 @@ const App: React.FC = () => {
     const fetchActors = async () => {
 
       try {
-        const response = await fetch('/api/v1/actors/all', {
+        const response = await fetch(`${API_BASE}/api/v1/actors/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -136,7 +138,7 @@ const App: React.FC = () => {
     const fetchWarnings = async () => {
 
       try {
-        const response = await fetch('/api/v1/warnings/all', {
+        const response = await fetch(`${API_BASE}/api/v1/warnings/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -161,7 +163,7 @@ const App: React.FC = () => {
     const fetchGenres = async () => {
 
       try {
-        const response = await fetch('/api/v1/genres/all', {
+        const response = await fetch(`${API_BASE}/api/v1/genres/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -186,7 +188,7 @@ const App: React.FC = () => {
     const fetchContentTypes = async () => {
 
       try {
-        const response = await fetch('/api/v1/content-types/all', {
+        const response = await fetch(`${API_BASE}/api/v1/content-types/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -270,7 +272,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchEpisodes = async () => {
       try {
-        const response = await fetch('/episodes', {
+        const response = await fetch(`${API_BASE}/episodes`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -324,7 +326,7 @@ const App: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/v1/auth/logout', {
+      const response = await fetch(`${API_BASE}/api/v1/auth/logout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -374,7 +376,7 @@ const App: React.FC = () => {
         console.warn('Avatar is not a valid base64 image string. Skipping avatar upload.');
       }
 
-      const response = await fetch('/api/v1/users/add', {
+      const response = await fetch(`${API_BASE}/api/v1/users/add`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -481,7 +483,7 @@ const App: React.FC = () => {
         formData.append('video', content.videoFile);
       }
 
-      const response = await fetch('/api/v1/admin/contents', {
+      const response = await fetch(`${API_BASE}/api/v1/admin/contents`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -578,7 +580,7 @@ const App: React.FC = () => {
     }
 
     try {
-      const response = await fetch('/api/v1/genres', {
+      const response = await fetch(`${API_BASE}/api/v1/genres`, {
         method: 'POST',
         body: formData,
         headers: {
@@ -610,7 +612,7 @@ const App: React.FC = () => {
 
   const handleAddContentType = async (contentType: ContentType) => {
     try {
-      const response = await fetch('/api/v1/content-types', {
+      const response = await fetch(`${API_BASE}/api/v1/content-types`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -624,7 +626,7 @@ const App: React.FC = () => {
       });
 
       if (response.ok) {
-        const fetchResponse = await fetch('/api/v1/content-types/all', {
+        const fetchResponse = await fetch(`${API_BASE}/api/v1/content-types/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -656,7 +658,7 @@ const App: React.FC = () => {
 
   const handleAddActor = async (actor: Actor) => {
     try {
-      const response = await fetch('/api/v1/actors', {
+      const response = await fetch(`${API_BASE}/api/v1/actors`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -670,7 +672,7 @@ const App: React.FC = () => {
       });
 
       if (response.ok) {
-        const fetchResponse = await fetch('/api/v1/actors/all', {
+        const fetchResponse = await fetch(`${API_BASE}/api/v1/actors/all`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -722,7 +724,7 @@ const App: React.FC = () => {
     }
 
     try{
-      const response = await fetch('/api/v1/admin/episodes', {
+      const response = await fetch(`${API_BASE}/api/v1/admin/episodes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -798,7 +800,7 @@ const App: React.FC = () => {
 
   const handleAddWarning = async (warning: Warning) => {
     try {
-      const response = await fetch('/api/v1/warnings', {
+      const response = await fetch(`${API_BASE}/api/v1/warnings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
