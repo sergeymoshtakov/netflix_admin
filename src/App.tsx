@@ -68,7 +68,7 @@ const App: React.FC = () => {
       if (!accessToken || roles.length === 0) return;
 
       try {
-        const response = await fetch(`${API_BASE}/api/v1/users`, {
+        const response = await fetch(`${API_BASE}/api/v1/users?size=30`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -272,7 +272,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchEpisodes = async () => {
       try {
-        const response = await fetch(`${API_BASE}/episodes`, {
+        const response = await fetch('/episodes', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

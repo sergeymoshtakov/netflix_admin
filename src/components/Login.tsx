@@ -78,7 +78,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
       const userHeaders = new Headers();
       userHeaders.set('Authorization', `Bearer ${loginData.accessToken}`);
 
-      const allUsersResponse = await fetch(`${API_BASE}/appUsers`, {
+      const allUsersResponse = await fetch('/appUsers', {
         method: 'GET',
         headers: userHeaders,
       });
@@ -120,7 +120,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
 
       try {
         // First, fetch all userRoles
-        const userRolesResponse = await fetch(`${API_BASE}/userRoles`, {
+        const userRolesResponse = await fetch('/userRoles', {
           headers: userHeaders,
         });
 
@@ -167,7 +167,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
                   console.warn('Role endpoint returned non-JSON response for:', userRoleLink._links.role.href);
                   // Try alternative approach: extract role ID and fetch from /roles
                   const roleId = userRoleLink._links.role.href.split('/').pop();
-                  const allRolesResponse = await fetch(`${API_BASE}/roles`, { headers: userHeaders });
+                  const allRolesResponse = await fetch('/roles', { headers: userHeaders });
                   
                   if (allRolesResponse.ok) {
                     const allRolesData = await allRolesResponse.json();
