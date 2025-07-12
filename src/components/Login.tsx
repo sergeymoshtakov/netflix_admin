@@ -34,7 +34,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, setRefreshToken, setAccessToken 
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const API_BASE = 'http://cinemate.ddns.net:8081/api/v1';
+  const API_BASE = 'http://cinemate.ddns.net:8081';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
