@@ -68,7 +68,7 @@ const App: React.FC = () => {
       if (!accessToken || roles.length === 0) return;
 
       try {
-        const response = await fetch(`${API_BASE}api/v1/users`, {
+        const response = await fetch(`${API_BASE}/api/v1/users`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -228,7 +228,7 @@ const App: React.FC = () => {
       ).toString();
 
       try {
-        const response = await fetch(`/api/v1/admin/contents?${queryString}`, {
+        const response = await fetch(`${API_BASE}/api/v1/admin/contents?${queryString}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -397,7 +397,7 @@ const App: React.FC = () => {
 
   const handleEditUser = async (user: AppUser, index: number) => {
     try {
-      const response = await fetch(`/api/v1/users/${user.id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/users/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -430,7 +430,7 @@ const App: React.FC = () => {
 
   const handleDeleteUser = async (index: number) => {
     try {
-      const response = await fetch(`/api/v1/users/${index}`, {
+      const response = await fetch(`${API_BASE}/api/v1/users/${index}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -505,7 +505,7 @@ const App: React.FC = () => {
 
   const handleEditContent = async (content: Content, index: number) => {
     try {
-      const response = await fetch(`/api/v1/admin/contents/${content.id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/admin/contents/${content.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -528,7 +528,7 @@ const App: React.FC = () => {
 
   const handleDeleteContent = async (index: number, id: number) => {
     try {
-      const response = await fetch(`/api/v1/admin/contents/${id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/admin/contents/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -746,7 +746,7 @@ const App: React.FC = () => {
 
   const handleEditEpisode = async (episode: Episode, index: number) => {
     try {
-      const response = await fetch(`/api/v1/admin/episodes/${episode.id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/admin/episodes/${episode.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -779,7 +779,7 @@ const App: React.FC = () => {
 
   const handleDeleteEpisode = async (index: number, id: number) => {
     try {
-      const response = await fetch(`/api/v1/admin/episodes/${id}`, {
+      const response = await fetch(`${API_BASE}/api/v1/admin/episodes/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
