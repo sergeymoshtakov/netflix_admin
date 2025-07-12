@@ -267,7 +267,7 @@ const App: React.FC = () => {
       }
     };
     fetchContents();
-  });
+  }, [accessToken]);
 
   useEffect(() => {
     const fetchEpisodes = async () => {
@@ -318,7 +318,7 @@ const App: React.FC = () => {
     };
 
     fetchEpisodes();
-  });
+  }, [accessToken]);
 
   const handleLogin = (user: AppUser) => {
     setCurrentUser(user);
