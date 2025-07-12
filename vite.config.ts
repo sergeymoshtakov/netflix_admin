@@ -11,22 +11,27 @@ export default defineConfig({
         target: backendTarget,
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''),
+        secure: false,
       },
       '/appUsers': {
         target: backendTarget,
         changeOrigin: true,
+        secure: false,
       },
       '/roles': {
         target: backendTarget,
         changeOrigin: true,
+        secure: false,
       },
       '/userRoles': {
         target: backendTarget,
         changeOrigin: true,
+        secure: false,
       },
       '/episodes': {
         target: backendTarget,
         changeOrigin: true,
+        secure: false,
       },
     },
   },

@@ -871,7 +871,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/roles"
+                path="/roles-list"
                 element={
                   <RoleList
                     roles={roles}
@@ -915,7 +915,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/episodes"
+                path="/episodes-list"
                 element={
                   <EpisodeList
                     episodes={episodes}
